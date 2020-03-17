@@ -1,10 +1,12 @@
 #include <iostream>
-#include <fstream>
+#include "File.h"
 
-constexpr int WIDTH = 480, HEIGHT = 240;
+constexpr int WIDTH = 255, HEIGHT = 255;
 
 int main() {
-    std::ofstream file("./renders/");
+    File file("../renders", WIDTH, HEIGHT);
+    int * pixels = new int[WIDTH * HEIGHT]{0};
 
+    file.write();
     return 0;
 }

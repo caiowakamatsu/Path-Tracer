@@ -3,4 +3,4 @@ project(Ray_Tracer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Ray_Tracer main.cpp)
+add_executable(Ray_Tracer main.cpp File.cpp File.h vector3.cpp vector3.h)
