@@ -1,6 +1,10 @@
 #include <iostream>
+#include <fstream>
+
+constexpr int WIDTH = 480, HEIGHT = 240;
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    std::ofstream file("./renders/");
+
     return 0;
 }
