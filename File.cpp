@@ -42,9 +42,9 @@ bool File::write() {
 
     for(int y=0; y<height; y++){
         for(int x=0; x<width; x++){
-            int r = data[x + y * width] >> 16;
-            int g = data[x + y * width] >> 8;
-            int b = data[x + y * width];
+            int r = (data[x + y * width] >> 16)&0x0ff;
+            int g = (data[x + y * width] >> 8)&0x0ff;
+            int b = (data[x + y * width])&0x0ff;
             output << r << " " << g << " " << b << std::endl;
         }
     }

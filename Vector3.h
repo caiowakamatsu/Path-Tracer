@@ -9,15 +9,23 @@ public:
     Vector3();
     Vector3(float, float, float);
 
-    inline Vector3 operator + (Vector3 &a);
-    inline Vector3 operator - (Vector3 &a);
-    inline Vector3 operator / (Vector3 &a);
-    inline Vector3 operator * (Vector3 &a);
-    inline Vector3 operator * (float t);
+    Vector3 operator + (Vector3 &a);
+    Vector3 operator - (Vector3 &a);
+    Vector3 operator / (Vector3 &a);
+    Vector3 operator * (Vector3 &a);
+    Vector3 operator + (float a);
+    Vector3 operator - (float a);
+    Vector3 operator / (float a);
+    Vector3 operator * (float t);
 
-    inline float dot (Vector3 &a);
-    inline float length();
-    inline float lengthSq();
-    inline Vector3 cross(Vector3 &a);
-    inline Vector3 toUnitVector();
+    float dot (Vector3 &a);
+    float length();
+    float lengthSq();
+    Vector3 cross(Vector3 &a);
+    Vector3 toUnitVector();
+
+    void copyFrom(Vector3 *);
+    void copyTo(Vector3 *);
+    void copyFrom(Vector3 &);
+    void copyTo(Vector3 &);
 };

@@ -5,9 +5,10 @@
 #pragma once
 
 #include "Ray.h"
+#include "HitRecord.h"
 
 class Shape {
 public:
-    virtual float intersect(Ray &ray) = 0;
-    virtual ~Shape() = 0;
+    virtual Vector3 colour(Vector3 &, Ray&) = 0;
+    virtual void intersect(Ray &, HitRecord&) = 0;
 };

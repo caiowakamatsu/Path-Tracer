@@ -3,4 +3,4 @@ project(Ray_Tracer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Ray_Tracer main.cpp File.cpp File.h Vector3.cpp Vector3.h World.cpp World.h Ray.cpp Ray.h Shape.h HitRecord.h Sphere.cpp Sphere.h)
+add_executable(Ray_Tracer main.cpp File.cpp File.h Vector3.cpp Vector3.h World.cpp World.h Ray.cpp Ray.h Shape.h HitRecord.h Sphere.cpp Sphere.h Camera.cpp Camera.h)

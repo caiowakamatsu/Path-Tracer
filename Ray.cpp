@@ -10,5 +10,5 @@ Ray::Ray(Vector3 & origin, Vector3 & direction) {
 }
 
 Vector3 Ray::getPoint(float t) {
-    return Vector3(direction * t + origin);
+    return direction * t + origin;
 }
