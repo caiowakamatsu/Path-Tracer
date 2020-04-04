@@ -5,34 +5,65 @@
 #include "Ray.h"
 #include "Sphere.h"
 
-constexpr int WIDTH = 52, HEIGHT = 52;
+constexpr int WIDTH = 1920, HEIGHT = 1080;
+constexpr int ANTI_ALIASING_LEVEL = 2;
+constexpr int AA_DIV = ANTI_ALIASING_LEVEL * ANTI_ALIASING_LEVEL;
+constexpr float ANTI_ALIASING_OFFSET = 1.0f / (ANTI_ALIASING_LEVEL * 2);
 constexpr float ASPECT = (float) WIDTH / (float) HEIGHT;
+constexpr float PIXEL_PERCENTAGE = 1.0f / (WIDTH * HEIGHT);
 
 int main() {
     // Create the file object that lets us output intrgb arrays.
-    File * file = new File("../renders", WIDTH, HEIGHT);
-    int * pixels = new int[WIDTH * HEIGHT]{0};
+    auto file = new File("../renders", WIDTH, HEIGHT);
+    auto pixels = new int[WIDTH * HEIGHT]{0};
 
     // Make the camera
-    auto camera = new Camera(new Vector3(0, 0, 10), new Vector3(0, 0, -1), 90, ASPECT);
+    auto camera = new Camera(new Vector3(0, 5, 20), new Vector3(0, 0, -1), 30, ASPECT);
+
+    /* Progress bar code from https://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf*/
+    float progress = 0.0;
+    int barWidth = 70;
 
     // Generate the world :p
-    World * world = new World();
-    world->addShape(new Sphere(new Vector3(0, 0, -10), 15.0f));
-//    world->addShape(new Sphere(new Vector3(0, -120.5f, -10), 100.0f));
-    Vector3 origin = Vector3(0, 0, 10);
+    auto world = new World();
+    world->addShape(new Sphere(new Vector3(0, 5, -1), 5));
+    world->addShape(new Sphere(new Vector3(0, -1000.5f, -1), 1000.0f));
 
+    int prog = 0;
     for(int x=0; x<WIDTH; x++)
         for(int y=0; y<HEIGHT; y++){
-            Ray * ray = camera->getRay((float) x / WIDTH * 2 - 1, (float) y / HEIGHT * 2 - 1);
-            auto sample = world->trace(ray);
+            Vector3 sample = Vector3();
+            prog++;
+            if(prog % 10 == 0){
+                std::cout << "[";
+                int pos = barWidth * progress;
+                for (int i = 0; i < barWidth; ++i) {
+                    if (i < pos) std::cout << "=";
+                    else if (i == pos) std::cout << ">";
+                    else std::cout << " ";
+                }
+                std::cout << "] " << int(progress * 100.0) << " %\r";
+                std::cout.flush();
 
-            int r = (int) (sample.x * 255);
-            int g = (int) (sample.y * 255);
-            int b = (int) (sample.z * 255);
+                progress += PIXEL_PERCENTAGE * 10;
+            }
 
-            pixels[x + y * WIDTH] =((r&0x0ff) << 16 | (g&0x0ff) << 8 | b&0x0ff);
-            delete(ray);
+            for(int a=1; a<=ANTI_ALIASING_LEVEL; a++){
+                for(int b=1; b<=ANTI_ALIASING_LEVEL; b++) {
+                    Ray * ray = camera->getRay(
+                            (float) (x + a * ANTI_ALIASING_OFFSET) / WIDTH * 2 - 1,
+                            (float) (y + b * ANTI_ALIASING_OFFSET) / HEIGHT * 2 - 1);
+                    auto aa_sample = world->trace(ray);
+                    sample += aa_sample;
+                    delete(ray);
+                }
+            }
+
+            pixels[x + y * WIDTH] =
+                    ((int) ((sample.x / AA_DIV) * 255)&0x0ff) << 16 |
+                    ((int) ((sample.y / AA_DIV) * 255)&0x0ff) << 8 |
+                    (int) ((sample.z / AA_DIV) * 255)&0x0ff;
+
         }
 
     file->setData(pixels);
@@ -40,6 +71,7 @@ int main() {
 
     delete(file);
     delete(world);
+    delete(camera);
 
     return 0;
 }

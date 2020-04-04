@@ -8,8 +8,9 @@
 
 Camera::Camera(Vector3 * origin, Vector3 * direction, float fov, float aspect) {
     float theta = fov * 3.1415f / 180;
-    float half_width = tanf(theta / 2);
-    float half_height = aspect * half_width;
+    float half_height = tanf(theta / 2);
+    float half_width = aspect * half_height;
+    (*direction) = (*direction).toUnitVector();
     this->origin = origin;
     Vector3 u = Vector3(0, 1, 0).cross(*direction);
     Vector3 v = u.cross(*direction);
@@ -25,10 +26,7 @@ Camera::Camera(Vector3 * origin, Vector3 * direction, float fov, float aspect) {
 Ray * Camera::getRay(float x, float y) {
     auto xOffset = (*horizontal)* x;
     auto yOffset = (*vertical)* y;
-    Vector3 e = true ?
-            ((*center + xOffset + yOffset) - *origin).toUnitVector() :
-                Vector3(x, y, -0.2f).toUnitVector();
-    std::cout << "Screen Location X: " << e.x << ", Y: " << e.y << ", Z: " << e.z << std::endl;
+    Vector3 e = ((*center + xOffset + yOffset) - *origin).toUnitVector();
     return new Ray(*origin, e);
 }
 

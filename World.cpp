@@ -22,7 +22,7 @@ Vector3 World::colour(Ray *ray) {
     for(auto shape : shapes){
         HitRecord rec(shape, ray);
         shape->intersect(* ray, rec);
-        if((rec.hit && !best.hit) || (rec.distance < best.distance)) best = rec;
+        if((rec.hit && !best.hit) || ((rec.distance < best.distance) && rec.distance != -1.0f)) best = rec;
     }
     Vector3 intersectionPoint;
     if(best.hit) intersectionPoint = best.ray->getPoint(best.distance);

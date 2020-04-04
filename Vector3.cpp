@@ -6,7 +6,9 @@
 #include "Vector3.h"
 
 Vector3::Vector3(){
-    Vector3(0, 0, 0);
+    this->x = 0;
+    this->y = 0;
+    this->z = 0;
 }
 
 Vector3::Vector3(float x, float y, float z) {
@@ -19,16 +21,40 @@ Vector3 Vector3::operator+(Vector3 &a) {
     return Vector3(x + a.x, y + a.y, z + a.z);
 }
 
+void Vector3::operator+=(Vector3 &a) {
+    x += a.x;
+    y += a.y;
+    z += a.z;
+}
+
 Vector3 Vector3::operator-(Vector3 &a) {
     return Vector3(x - a.x, y - a.y, z - a.z);
+}
+
+void Vector3::operator-=(Vector3 &a) {
+    x -= a.x;
+    y -= a.y;
+    z -= a.z;
 }
 
 Vector3 Vector3::operator/(Vector3 &a) {
     return Vector3(x / a.x, y / a.y, z / a.z);
 }
 
+void Vector3::operator/=(Vector3 &a) {
+    x /= a.x;
+    y /= a.y;
+    z /= a.z;
+}
+
 Vector3 Vector3::operator*(Vector3 &a) {
     return Vector3(x * a.x, y * a.y, z * a.z);
+}
+
+void Vector3::operator*=(Vector3 &a) {
+    x *= a.x;
+    y *= a.y;
+    z *= a.z;
 }
 
 Vector3 Vector3::operator+(float a) {
@@ -49,6 +75,10 @@ Vector3 Vector3::operator*(float t) {
 
 float Vector3::dot(Vector3 &a) {
     return x * a.x + y * a.y + z * a.z;
+}
+
+float Vector3::dist(Vector3 &a) {
+    return sqrtf(powf(x - a.x, 2) + powf(y * a.y, 2) + powf(z * a.z, 2));
 }
 
 float Vector3::length() {

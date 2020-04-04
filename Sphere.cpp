@@ -19,6 +19,7 @@ Sphere::~Sphere() {
 
 void Sphere::intersect(Ray & ray, HitRecord & record) {
     record.shape = this;
+
     Vector3 oc = ray.origin - *this->origin;
     float b = ray.direction.dot(oc);
     float c = oc.dot(oc) - this->radius2;
