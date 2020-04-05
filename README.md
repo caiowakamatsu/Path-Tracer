@@ -15,7 +15,7 @@ What things you need to install the software and how to install them
 3) gcc
 
 
-### Installing
+### Building
 
 ```
 $git clone https://github.com/LegendWasTaken/Ray-Tracer.git
@@ -39,7 +39,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Progress bar code from [this stack overflow answer](https://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf)
 * [S0lly](https://www.youtube.com/user/mozeeOnTV) for getting me into ray tracing and graphics programming
 * Graphics Programming [discord](https://discord.gg/6mgNGk7) for just being overall lads and helpful.
 

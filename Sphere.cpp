@@ -36,6 +36,6 @@ void Sphere::intersect(Ray & ray, HitRecord & record) {
 }
 
 Vector3 Sphere::colour(Vector3 & point, Ray & ray) {
-    Vector3 normal = (point - *this->origin).toUnitVector() * 0.5 + 0.5f;
+    Vector3 normal = (*this->origin - point).toUnitVector() * 0.5 + 0.5f;
     return normal;
 }

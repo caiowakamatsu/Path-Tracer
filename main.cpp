@@ -1,16 +1,18 @@
 #include <iostream>
+
+#include <chrono>
 #include "File.h"
 #include "World.h"
 #include "Vector3.h"
 #include "Ray.h"
 #include "Sphere.h"
 
-constexpr int WIDTH = 1920, HEIGHT = 1080;
-constexpr int ANTI_ALIASING_LEVEL = 2;
+//680 × 4320
+constexpr int WIDTH = 800, HEIGHT = 800;
+constexpr int ANTI_ALIASING_LEVEL = 1;
 constexpr int AA_DIV = ANTI_ALIASING_LEVEL * ANTI_ALIASING_LEVEL;
 constexpr float ANTI_ALIASING_OFFSET = 1.0f / (ANTI_ALIASING_LEVEL * 2);
 constexpr float ASPECT = (float) WIDTH / (float) HEIGHT;
-constexpr float PIXEL_PERCENTAGE = 1.0f / (WIDTH * HEIGHT);
 
 int main() {
     // Create the file object that lets us output intrgb arrays.
@@ -20,42 +22,22 @@ int main() {
     // Make the camera
     auto camera = new Camera(new Vector3(0, 5, 20), new Vector3(0, 0, -1), 30, ASPECT);
 
-    /* Progress bar code from https://stackoverflow.com/questions/14539867/how-to-display-a-progress-indicator-in-pure-c-c-cout-printf*/
-    float progress = 0.0;
-    int barWidth = 70;
-
     // Generate the world :p
     auto world = new World();
     world->addShape(new Sphere(new Vector3(0, 5, -1), 5));
     world->addShape(new Sphere(new Vector3(0, -1000.5f, -1), 1000.0f));
 
-    int prog = 0;
+    auto start = std::chrono::high_resolution_clock::now();
     for(int x=0; x<WIDTH; x++)
         for(int y=0; y<HEIGHT; y++){
             Vector3 sample = Vector3();
-            prog++;
-            if(prog % 10 == 0){
-                std::cout << "[";
-                int pos = barWidth * progress;
-                for (int i = 0; i < barWidth; ++i) {
-                    if (i < pos) std::cout << "=";
-                    else if (i == pos) std::cout << ">";
-                    else std::cout << " ";
-                }
-                std::cout << "] " << int(progress * 100.0) << " %\r";
-                std::cout.flush();
-
-                progress += PIXEL_PERCENTAGE * 10;
-            }
-
             for(int a=1; a<=ANTI_ALIASING_LEVEL; a++){
                 for(int b=1; b<=ANTI_ALIASING_LEVEL; b++) {
-                    Ray * ray = camera->getRay(
+                    Ray ray = camera->getRay(
                             (float) (x + a * ANTI_ALIASING_OFFSET) / WIDTH * 2 - 1,
                             (float) (y + b * ANTI_ALIASING_OFFSET) / HEIGHT * 2 - 1);
                     auto aa_sample = world->trace(ray);
                     sample += aa_sample;
-                    delete(ray);
                 }
             }
 
@@ -65,7 +47,9 @@ int main() {
                     (int) ((sample.z / AA_DIV) * 255)&0x0ff;
 
         }
-
+    auto end = std::chrono::high_resolution_clock::now();
+    auto elapsed = end - start;
+    printf("Total Execution Time %.2fms\n", std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() / 1000000.0f);
     file->setData(pixels);
     file->write();
 

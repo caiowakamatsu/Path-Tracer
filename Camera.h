@@ -8,12 +8,11 @@
 
 class Camera {
 private:
-    Vector3 * vertical, * horizontal, * center;
+    Vector3 vertical, horizontal, center;
 public:
-    Vector3 * origin;
+    Vector3 origin;
     float fov;
 
     Camera(Vector3 * , Vector3 *, float, float);
-    Ray * getRay(float x, float y);
-    ~Camera();
+    Ray getRay(float x, float y);
 };
