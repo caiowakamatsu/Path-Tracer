@@ -7,20 +7,20 @@
 #include <cmath>
 #include <iostream>
 
-Sphere::Sphere(Vector3 * origin, float radius) {
+Sphere::Sphere(Vector3 origin, float radius) {
     this->origin = origin;
     this->radius = radius;
     this->radius2 = radius * radius;
 }
 
 Sphere::~Sphere() {
-    delete(this->origin);
+    //delete(this->origin);
 }
 
 void Sphere::intersect(Ray & ray, HitRecord & record) {
     record.shape = this;
 
-    Vector3 oc = ray.origin - *this->origin;
+    Vector3 oc = ray.origin - this->origin;
     float b = ray.direction.dot(oc);
     float c = oc.dot(oc) - this->radius2;
     float delta = b * b - c;
@@ -31,11 +31,24 @@ void Sphere::intersect(Ray & ray, HitRecord & record) {
         float t1 = -b+delta;
         if(t0 < 0 || t1 < 0) record.hit = false; else {
             record.distance = t0 < t1 ? t0 : t1;
+            record.intersectionPoint = ray.getPoint(record.distance);
         }
     }
 }
 
 Vector3 Sphere::colour(Vector3 & point, Ray & ray) {
-    Vector3 normal = (*this->origin - point).toUnitVector() * 0.5 + 0.5f;
+    Vector3 normal = (point - this->origin).toUnitVector() * 0.5 + 0.5f;
     return normal;
+}
+
+Ray Sphere::getReflectionRay(HitRecord & rec) {
+    Vector3 normal = getNormal(rec.intersectionPoint);
+    Vector3 rayOrigin = rec.ray.origin;
+    Vector3 a = normal * normal.dot(rec.ray.origin) * 2;
+    Vector3 reflection = rayOrigin - a;
+    return Ray(rec.intersectionPoint, reflection);
+}
+
+Vector3 Sphere::getNormal(Vector3& point){
+    return (point - this->origin).toUnitVector();
 }

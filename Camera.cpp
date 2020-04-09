@@ -26,7 +26,7 @@ Camera::Camera(Vector3 * origin, Vector3 * direction, float fov, float aspect) {
 Ray Camera::getRay(float x, float y) {
     auto xOffset = horizontal * x;
     auto yOffset = vertical * y;
-//    Vector3 e = (center + xOffset + yOffset - origin).toUnitVector();
-Vector3 e = Vector3(0, 0, 0);
+    Vector3 e = (center + xOffset + yOffset - origin).toUnitVector();
+//Vector3 e = Vector3(0, 0, 0);
     return Ray(origin, e);
 }

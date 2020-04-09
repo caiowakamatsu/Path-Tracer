@@ -8,7 +8,7 @@
 
 class Ray {
 public:
-    Ray(Vector3 &, Vector3 &);
+    Ray(Vector3, Vector3);
     Vector3 origin, direction;
     Vector3 getPoint(float);
 };

@@ -13,5 +13,5 @@ public:
     World();
     ~World();
     void addShape(Shape *);
-    Vector3 trace(Ray ray);
+    Vector3 trace(Ray& ray);
 };

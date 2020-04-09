@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <chrono>
 #include "File.h"
 #include "World.h"
@@ -7,7 +6,6 @@
 #include "Ray.h"
 #include "Sphere.h"
 
-//680 × 4320
 constexpr int WIDTH = 800, HEIGHT = 800;
 constexpr int ANTI_ALIASING_LEVEL = 1;
 constexpr int AA_DIV = ANTI_ALIASING_LEVEL * ANTI_ALIASING_LEVEL;
@@ -24,8 +22,8 @@ int main() {
 
     // Generate the world :p
     auto world = new World();
-    world->addShape(new Sphere(new Vector3(0, 5, -1), 5));
-    world->addShape(new Sphere(new Vector3(0, -1000.5f, -1), 1000.0f));
+    world->addShape(new Sphere(Vector3(0, 5, -1), 5));
+    world->addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f));
 
     auto start = std::chrono::high_resolution_clock::now();
     for(int x=0; x<WIDTH; x++)
@@ -45,7 +43,6 @@ int main() {
                     ((int) ((sample.x / AA_DIV) * 255)&0x0ff) << 16 |
                     ((int) ((sample.y / AA_DIV) * 255)&0x0ff) << 8 |
                     (int) ((sample.z / AA_DIV) * 255)&0x0ff;
-
         }
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed = end - start;

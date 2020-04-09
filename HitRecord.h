@@ -12,14 +12,14 @@ class Shape;
 
 struct HitRecord {
 public:
-    HitRecord(Shape *s, Ray * r) {
+    HitRecord(Shape* s, Ray r) : ray(r) {
         hit = false;
         distance = -1.0f;
         shape = s;
-        ray = r;
     }
     bool hit;
     float distance;
-    Ray * ray;
-    Shape * shape;
+    Ray ray;
+    Shape* shape;
+    Vector3 intersectionPoint;
 };

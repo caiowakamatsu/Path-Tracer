@@ -16,7 +16,7 @@ public:
     Vector3 operator / (Vector3 &a);
     void operator /= (Vector3 &a);
     Vector3 operator * (Vector3 &a);
-    Vector3 operator *= (Vector3 &a);
+    void operator *= (Vector3 &a);
     Vector3 operator + (float a);
     Vector3 operator - (float a);
     Vector3 operator / (float a);

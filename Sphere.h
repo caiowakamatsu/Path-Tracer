@@ -8,12 +8,14 @@
 
 class Sphere : public Shape {
 public:
-    Sphere(Vector3 *, float);
-    Vector3 * origin;
+    Sphere(Vector3, float);
+    Vector3 origin;
     float radius;
     void intersect(Ray &, HitRecord &) override;
+    Ray getReflectionRay(HitRecord&) override;
     Vector3 colour(Vector3 &, Ray &) override;
     ~Sphere();
 private:
+    Vector3 getNormal(Vector3& point);
     float radius2;
 };
