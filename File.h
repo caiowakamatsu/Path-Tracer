@@ -15,9 +15,11 @@ private:
     int width, height;
     int * data;
     std::string directory;
+    std::string name;
 public:
     File(std::string, int, int);
     ~File();
     void setData(int *);
+    void open();
     bool write();
 };

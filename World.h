@@ -8,10 +8,10 @@
 class World {
 private:
     std::vector<Shape *> shapes;
-    Vector3 colour(Ray ray);
+    Vector3 colour(Ray, int);
 public:
     World();
     ~World();
     void addShape(Shape *);
-    Vector3 trace(Ray& ray);
+    Vector3 trace(Ray&);
 };

@@ -5,17 +5,19 @@
 
 #include "Shape.h"
 #include "Vector3.h"
+#include "Material.h"
 
 class Sphere : public Shape {
 public:
-    Sphere(Vector3, float);
+    Sphere(Vector3, float, Material);
     Vector3 origin;
     float radius;
     void intersect(Ray &, HitRecord &) override;
-    Ray getReflectionRay(HitRecord&) override;
+    Ray getRecursiveRay(HitRecord&) override;
     Vector3 colour(Vector3 &, Ray &) override;
     ~Sphere();
 private:
     Vector3 getNormal(Vector3& point);
     float radius2;
+    Material mat;
 };

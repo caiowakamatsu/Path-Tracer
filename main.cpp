@@ -5,9 +5,10 @@
 #include "Vector3.h"
 #include "Ray.h"
 #include "Sphere.h"
+#include "Material.h"
 
 constexpr int WIDTH = 800, HEIGHT = 800;
-constexpr int ANTI_ALIASING_LEVEL = 1;
+constexpr int ANTI_ALIASING_LEVEL = 2;
 constexpr int AA_DIV = ANTI_ALIASING_LEVEL * ANTI_ALIASING_LEVEL;
 constexpr float ANTI_ALIASING_OFFSET = 1.0f / (ANTI_ALIASING_LEVEL * 2);
 constexpr float ASPECT = (float) WIDTH / (float) HEIGHT;
@@ -22,8 +23,8 @@ int main() {
 
     // Generate the world :p
     auto world = new World();
-    world->addShape(new Sphere(Vector3(0, 5, -1), 5));
-    world->addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f));
+    world->addShape(new Sphere(Vector3(0, 5, -1), 5, Material(Vector3(1, 1, 1), 10)));
+    world->addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(1, 1, 1), 10)));
 
     auto start = std::chrono::high_resolution_clock::now();
     for(int x=0; x<WIDTH; x++)
@@ -49,6 +50,7 @@ int main() {
     printf("Total Execution Time %.2fms\n", std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() / 1000000.0f);
     file->setData(pixels);
     file->write();
+    file->open();
 
     delete(file);
     delete(world);

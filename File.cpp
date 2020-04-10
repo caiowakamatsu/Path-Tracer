@@ -32,7 +32,8 @@ bool File::write() {
     std::stringstream buffer;
     auto t = std::time(nullptr);
     buffer << std::put_time(std::localtime(&t), "%a %b %d %H:%M:%S %Y");
-    std::ofstream output(directory + "/render at " + buffer.str() + ".ppm");
+    name = directory + "/render at " + buffer.str() + ".ppm";
+    std::ofstream output(name);
     output << "P3" << std::endl;
     output << width << " " << height << std::endl;
     output << "255" << std::endl;
@@ -51,3 +52,7 @@ bool File::write() {
     return true;
 }
 
+void File::open(){
+    std::string cmdStr = "see \"" + name + "\"";
+    system(cmdStr.c_str());
+}
