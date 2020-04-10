@@ -73,6 +73,12 @@ Vector3 Vector3::operator*(float t) {
     return Vector3(x * t, y * t, z * t);
 }
 
+void Vector3::mix(Vector3& a, float t){
+    x = x + (a.x - x) * t;
+    y = y + (a.y - y) * t;
+    z = z + (a.z - z) * t;
+}
+
 float Vector3::dot(Vector3 &a) {
     return x * a.x + y * a.y + z * a.z;
 }

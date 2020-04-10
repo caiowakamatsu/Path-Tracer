@@ -10,6 +10,7 @@ class Material {
 public:
     Vector3 colour;
     float roughness;
-    Material(Vector3, float);
+    float absorb;
+    Material(Vector3, float, float);
     void getMaterialRay(Ray&);
 };

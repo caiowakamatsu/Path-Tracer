@@ -22,6 +22,7 @@ public:
     Vector3 operator / (float a);
     Vector3 operator * (float t);
 
+    void mix(Vector3&, float);
     float dot (Vector3 &a);
     float dist(Vector3 &a);
     float length();

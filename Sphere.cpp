@@ -41,12 +41,17 @@ Vector3 Sphere::colour(Vector3& point, Ray& ray) {
     return normal;
 }
 
+Material& Sphere::getMaterial() {
+    return mat;
+}
+
 Ray Sphere::getRecursiveRay(HitRecord& rec) {
     Vector3 normal = getNormal(rec.intersectionPoint);
     Vector3 rayOrigin = rec.ray.origin;
     Vector3 a = normal * normal.dot(rec.ray.origin) * 2;
     Vector3 reflection = rayOrigin - a;
-    Ray ret(rec.intersectionPoint, reflection);
+    normal = normal * 0.0001f;
+    Ray ret(rec.intersectionPoint + normal, reflection.toUnitVector());
     mat.getMaterialRay(ret);
     return ret;
 }

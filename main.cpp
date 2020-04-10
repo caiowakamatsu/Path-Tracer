@@ -23,8 +23,8 @@ int main() {
 
     // Generate the world :p
     auto world = new World();
-    world->addShape(new Sphere(Vector3(0, 5, -1), 5, Material(Vector3(1, 1, 1), 10)));
-    world->addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(1, 1, 1), 10)));
+    world->addShape(new Sphere(Vector3(0, 7, -1), 5, Material(Vector3(1, 0, 0), 0, 0)));
+    world->addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(1, 0, 0), 1, 0)));
 
     auto start = std::chrono::high_resolution_clock::now();
     for(int x=0; x<WIDTH; x++)

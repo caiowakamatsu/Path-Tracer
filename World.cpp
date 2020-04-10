@@ -22,16 +22,21 @@ Vector3 World::colour(Ray ray, int depth) {
         if((rec.hit && !best.hit) || ((rec.distance < best.distance) && rec.distance != -1.0f)) best = rec;
     }
     if (best.hit) {
-        Vector3 intersectionPoint = ray.getPoint(best.distance);
-        Vector3 currentColour = best.shape->colour(intersectionPoint, ray);
-        if(depth < 1){
-            Ray reflective = best.shape->getRecursiveRay(best);
-            Vector3 recursive = colour(reflective, depth);
-            currentColour = currentColour * 0.5;
-            return (recursive * 0.5) + currentColour;
+        Vector3 currentColour = best.shape->getMaterial().colour;
+        if (depth < 5) {
+            Ray recursiveRay = best.shape->getRecursiveRay(best);
+            best.shape->getMaterial().getMaterialRay(recursiveRay);
+            Vector3 recursive = colour(recursiveRay, depth);
+            recursive.mix(currentColour, best.shape->getMaterial().absorb);
+            return recursive;
         }
+        // Todo: calculate light here
         return currentColour;
-    } else return Vector3(204.0f, 255.0f, 255.0f);
+    }
+    float t = 0.5f * (ray.direction.y + 1.0f);
+    Vector3 max = Vector3(0, 1, 1) * (1 - t);
+    Vector3 min = Vector3(0, 0, 1) * t;
+    return max + min;
 }
 
 Vector3 World::trace(Ray& ray) {

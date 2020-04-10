@@ -6,9 +6,11 @@
 
 #include "Ray.h"
 #include "HitRecord.h"
+#include "Material.h"
 
 class Shape {
 public:
+    virtual Material& getMaterial() = 0;
     virtual Vector3 colour(Vector3 &, Ray&) = 0;
     virtual Ray getRecursiveRay(HitRecord& rec) = 0;
     virtual void intersect(Ray &, HitRecord&) = 0;
