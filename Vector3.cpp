@@ -79,9 +79,26 @@ void Vector3::mix(Vector3& a, float t){
     z = z + (a.z - z) * t;
 }
 
+Vector3 Vector3::reflect(Vector3& a) {
+    Vector3 b = a * 2.0 * dot(a);
+    return *this - b;
+}
+
+void Vector3::refract(Vector3 &a, float t) {
+    Vector3 unit = toUnitVector();
+    float dot = unit.dot(a);
+    float disc = 1.0f - t * t * (1.0 - dot * dot);
+    Vector3 other = a * sqrtf(disc);
+    Vector3 ret = (a * dot);
+    ret -= a;
+    ret = ret * t;
+    *this = disc > 0.0f ? ret - other : Vector3();
+}
+
 float Vector3::dot(Vector3 &a) {
     return x * a.x + y * a.y + z * a.z;
 }
+
 
 float Vector3::dist(Vector3 &a) {
     return sqrtf(powf(x - a.x, 2) + powf(y * a.y, 2) + powf(z * a.z, 2));

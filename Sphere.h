@@ -15,10 +15,9 @@ public:
     Material mat;
     void intersect(Ray &, HitRecord &) override;
     Ray getRecursiveRay(HitRecord&) override;
-    Vector3 colour(Vector3 &, Ray &) override;
+    Vector3 getNormal(Vector3 &) override;
     Material& getMaterial() override;
     ~Sphere();
 private:
-    Vector3 getNormal(Vector3& point);
     float radius2;
 };

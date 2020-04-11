@@ -23,12 +23,14 @@ public:
     Vector3 operator * (float t);
 
     void mix(Vector3&, float);
+    void refract(Vector3&, float);
     float dot (Vector3 &a);
     float dist(Vector3 &a);
     float length();
     float lengthSq();
     Vector3 cross(Vector3 &a);
     Vector3 toUnitVector();
+    Vector3 reflect(Vector3&);
 
     void copyFrom(Vector3 *);
     void copyTo(Vector3 *);

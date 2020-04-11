@@ -7,11 +7,14 @@
 
 class World {
 private:
+    int width, height, maxBounce;
+    float aspect;
     std::vector<Shape *> shapes;
-    Vector3 colour(Ray, int);
+    Vector3 colour(Ray);
 public:
-    World();
+    World(int, int, int);
     ~World();
     void addShape(Shape *);
+    void render(int*);
     Vector3 trace(Ray&);
 };
