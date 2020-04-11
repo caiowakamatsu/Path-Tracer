@@ -8,7 +8,9 @@
 #include "Material.h"
 #include <GL/glut.h>
 
-constexpr int WIDTH = 800, HEIGHT = 800;
+constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 4;
+
+/* Haha, these variables aren't used anymore. But they're going to stay because they will come back soon enough */
 constexpr int ANTI_ALIASING_LEVEL = 2;
 constexpr int AA_DIV = ANTI_ALIASING_LEVEL * ANTI_ALIASING_LEVEL;
 constexpr float ANTI_ALIASING_OFFSET = 1.0f / (ANTI_ALIASING_LEVEL * 2);
@@ -17,9 +19,9 @@ constexpr float ASPECT = (float) WIDTH / (float) HEIGHT;
 int* pixels;
 
 void display(){
-    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawPixels(WIDTH, HEIGHT, GL_RGBA, GL_BYTE, pixels);
+    glDrawPixels(WIDTH, HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
     glFlush();
 }
 
@@ -27,9 +29,9 @@ void display(){
 int main(int argc, char **argv) {
 
     pixels = new int[WIDTH * HEIGHT]{0};
-    auto world = World(WIDTH, HEIGHT, 4);
-    world.addShape(new Sphere(Vector3(0, 7, -1), 5, Material(Vector3(1, 1, 1), 0, 0, false)));
-    world.addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(0.7, 0.7, 0.7), 0.01, 0, false)));
+    auto world = World(WIDTH, HEIGHT, MAX_BOUNCES);
+    world.addShape(new Sphere(Vector3(0, 7, -1), 5, Material(Vector3(0, 1, 0), 0, 0, false)));
+    world.addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(0, 0, 1), 0, 0, false)));
 
     auto start = std::chrono::high_resolution_clock::now();
     world.render(pixels);

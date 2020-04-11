@@ -20,42 +20,45 @@ void World::addShape(Shape * shapePtr) {
 }
 
 // This returns a single ray trace
-Vector3 World::colour(Ray ray) {
-    /*
-    {
-        HitRecord best = HitRecord(nullptr, ray);
-        for (auto shape : shapes) {
-            HitRecord rec(shape, ray);
-            shape->intersect(ray, rec);
-            if ((rec.hit && !best.hit) || ((rec.distance < best.distance) && rec.distance != -1.0f)) best = rec;
-        }
-        if (best.hit) {
-            Vector3 currentColour = best.shape->getMaterial().colour;
-            if (depth < 5) {
-                Vector3 normal = best.shape->getNormal(best.intersectionPoint);
-                Ray recursiveRay = best.shape->getRecursiveRay(best);
-                Vector3 recursive = colour(recursiveRay, depth);
-                recursive.mix(currentColour, best.shape->getMaterial().absorb);
-                return recursive;
-            }
-            // Todo: calculate light here
-            return currentColour;
-        }
+bool World::colour(Ray& ray, ColourCache& cache) {
+    HitRecord best(nullptr, ray);
 
-    }*/
-//    return Vector3(0.7, 0.7, 0.7);
-    float t = 0.5f * (ray.direction.y + 1.0f);
-    Vector3 max = Vector3(0.7, 0.7, 0.7) * (1 - t);
-    Vector3 min = Vector3(0, 0, 0) * t;
-    return max + min;
+    // Main intersection loop
+    for(auto shape : shapes){
+        HitRecord rec(shape, ray);
+        shape->intersect(ray, rec);
+        if ((rec.hit && !best.hit) || ((rec.distance < best.distance) && rec.distance != -1.0f)) best = rec;
+    }
+
+    if(!best.hit){ // This runs if there was no intersection, and it hit the skyyyyyy
+        // Todo: replace with skybox to make look hecka cool
+        float t = 0.5f * (ray.direction.y + 1.0f);
+        Vector3 max = Vector3(1, 1, 1) * (1 - t);
+        Vector3 min = Vector3(0, 0, 1) * t;
+        cache.colour = max + min;
+        cache.intensity = 1;
+        return false;
+    } else { // Compute colour and intensity at intersection point and new ray
+        ray = best.shape->getRecursiveRay(best);
+        cache.colour = best.shape->getMaterial().colour;
+        cache.intensity = 1;
+        return true;
+    }
 }
 
 // This function returns the colour of a single path trace
-Vector3 World::trace(Ray& ray) {
+Vector3 World::trace(Ray ray) {
+    int actualBounces = -1;
+    ColourCache caches[maxBounce];
     for(int i=0; i<maxBounce; i++){
-
+        actualBounces++;
+        if(!colour(ray,caches[i])) break;
     }
-    return this->colour(ray);
+    Vector3 finalColour = caches[actualBounces].colour;
+    for(int i=actualBounces-1; i>=0; i--){
+        finalColour.mix(caches[i].colour, 0.5f);
+    }
+    return finalColour;
 }
 
 // Renders out the entire scene
@@ -68,10 +71,11 @@ void World::render(int* out) {
                     (float) y / height * 2 - 1);
             Vector3 sample = trace(ray);
 
-            out[x + y * width] =
-                    ((int) ((sample.x) * 255)&0x0ff) << 16 |
-                    ((int) ((sample.y) * 255)&0x0ff) << 8 |
-                    (int) ((sample.z) * 255)&0x0ff;
+            out[x + (height-y-1) * width] =
+                    255 << 24 |
+                    (((int) ((sample.z) * 255))&0x0ff) << 16 |
+                    (((int) ((sample.y) * 255))&0x0ff) << 8 |
+                    (((int) ((sample.x) * 255))&0x0ff) << 0;
         }
     }
 }

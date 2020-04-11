@@ -9,5 +9,5 @@ find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
 
-add_executable(Ray_Tracer main.cpp File.cpp File.h Vector3.cpp Vector3.h World.cpp World.h Ray.cpp Ray.h Shape.h HitRecord.h Sphere.cpp Sphere.h Camera.cpp Camera.h Material.cpp Material.h)
+add_executable(Ray_Tracer main.cpp File.cpp File.h Vector3.cpp Vector3.h World.cpp World.h Ray.cpp Ray.h Shape.h HitRecord.h Sphere.cpp Sphere.h Camera.cpp Camera.h Material.cpp Material.h ColourCache.h)
 target_link_libraries(Ray_Tracer ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} )
