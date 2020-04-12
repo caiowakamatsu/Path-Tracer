@@ -16,5 +16,4 @@ public:
     virtual Material& getMaterial() = 0;
     virtual Vector3 getNormal(Vector3 &) = 0;
     virtual void intersect(Ray &, HitRecord&) = 0;
-    virtual Ray getRecursiveRay(HitRecord& rec) = 0;
 };

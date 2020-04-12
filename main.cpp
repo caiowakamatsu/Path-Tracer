@@ -8,7 +8,7 @@
 #include "Material.h"
 #include <GL/glut.h>
 
-constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 4;
+constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 10;
 
 /* Haha, these variables aren't used anymore. But they're going to stay because they will come back soon enough */
 constexpr int ANTI_ALIASING_LEVEL = 2;
@@ -30,8 +30,8 @@ int main(int argc, char **argv) {
 
     pixels = new int[WIDTH * HEIGHT]{0};
     auto world = World(WIDTH, HEIGHT, MAX_BOUNCES);
-    world.addShape(new Sphere(Vector3(0, 7, -1), 5, Material(Vector3(0, 1, 0), 0, 0, false)));
-    world.addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(0, 0, 1), 0, 0, false)));
+    world.addShape(new Sphere(Vector3(0, 7, -1), 5, Material(Vector3(0, 0, 1), 0, 0, true)));
+    world.addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(0.75, 0.25, 0.05), 0.01, 0, false)));
 
     auto start = std::chrono::high_resolution_clock::now();
     world.render(pixels);

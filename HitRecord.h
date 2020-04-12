@@ -22,4 +22,5 @@ public:
     Ray ray;
     Shape* shape;
     Vector3 intersectionPoint;
+    Vector3 normal;
 };

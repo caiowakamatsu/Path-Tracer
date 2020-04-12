@@ -6,6 +6,7 @@
 #include "Vector3.h"
 #include "Ray.h"
 #include "HitRecord.h"
+#include <vector>
 
 class Material {
 public:
@@ -15,8 +16,7 @@ public:
     bool refract;
     float ref_index;
     Material(Vector3, float, float, bool, float = 1);
-    void getRefractiveRay(Ray&, Vector3&, HitRecord&);
-    void getMaterialRay(Ray&);
+    void transformRay(Ray&, std::vector<Ray>&, HitRecord&);
 private:
     bool canrefract(Vector3&, Vector3&, float, Vector3&);
 };
