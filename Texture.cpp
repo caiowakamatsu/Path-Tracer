@@ -27,8 +27,9 @@ Texture::Texture(const char *path, float xDelta, float yDelta) : width(0), heigh
 
 Vector3 Texture::getUV(float u, float v) {
     if(textured){
-//        modff(u + xd, &u);
-//        modff(v + yd, &v);
+        float hee;
+        u = modff(u + xd, &hee);
+        v = modff(v + yd, &hee);
         int x = (int) (u * width);
         int y = (int) (v * height);
         int index = x + y * width;
