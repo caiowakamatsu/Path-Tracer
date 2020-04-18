@@ -1,5 +1,5 @@
-# Ray Tracer
-This is a ray tracer I'm working on in C++.
+# Path Tracer
+This is a path tracer I'm working on in C++.
 
 ## Getting Started
 
