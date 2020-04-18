@@ -20,6 +20,8 @@ public:
     bool hit;
     float distance;
     Ray ray;
+    Vector3 emission;
+    Vector3 albedo;
     Shape* shape;
     Vector3 intersectionPoint;
     Vector3 normal;

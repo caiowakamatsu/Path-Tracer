@@ -35,8 +35,8 @@ void display(){
 
 int main(int argc, char **argv) {
 
-    char* p = "../skybox/shanghai_bund.jpg";
-//    char* p = {"../skybox/small_cathedral.jpg"};
+//    char* p = "../skybox/shanghai_bund.jpg";
+    char* p = {"../skybox/small_cathedral.jpg"};
     Texture t = Texture(p);
     pixels = new int[WIDTH * HEIGHT]{0};
     auto world = World(WIDTH, HEIGHT, t, MAX_BOUNCES);

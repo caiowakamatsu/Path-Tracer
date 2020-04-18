@@ -11,6 +11,6 @@
 
 class Material {
 public:
-    virtual void transformRay(Ray&, std::vector<Ray>&, HitRecord&) = 0;
-    virtual void getColour(float& outIntensity, Vector3& outColour, Vector3& uv) = 0;
+    virtual void transformRay(Ray& ray, HitRecord& rec) = 0;
+    virtual void getColour(Vector3& outEmission, Vector3& outColour, Vector3& uv) = 0;
 };

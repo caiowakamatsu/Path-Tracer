@@ -14,12 +14,9 @@ Camera::Camera(Vector3 * origin, Vector3 * direction, float fov, float aspect) {
     this->origin = *origin;
     Vector3 u = Vector3(0, 1, 0).cross(*direction);
     Vector3 v = u.cross(*direction);
-    center = Vector3();
-    (this->origin + *direction).copyTo(center);
-    horizontal = Vector3();
-    (u * 2 * half_width).copyTo(horizontal);
-    vertical = Vector3();
-    (v * 2 * half_height).copyTo(vertical);
+    center = this->origin + *direction;
+    horizontal = u * 2 * half_width;
+    vertical = v * 2 * half_height;
     delete(direction);
 }
 

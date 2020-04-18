@@ -5,6 +5,7 @@
 #include <cstdio>
 #include "iostream"
 #include "World.h"
+#include <cmath>
 
 World::World(int w, int h, Texture& t, int m, int r) : texture(t) {
     width = w;
@@ -21,7 +22,7 @@ void World::addShape(Shape * shapePtr) {
 }
 
 // This returns a single ray trace
-bool World::colour(Ray& ray, ColourCache& cache, std::vector<Ray>& rays) {
+bool World::colour(Ray& ray, HitRecord& out) {
     HitRecord best(nullptr, ray);
 
     // Main intersection loop
@@ -32,42 +33,37 @@ bool World::colour(Ray& ray, ColourCache& cache, std::vector<Ray>& rays) {
     }
 
     if(!best.hit){ // This runs if there was no intersection, and it hit the skyyyyyy
-//        cache.colour = Vector3(1, 1, 1);
-//        cache.intensity = 1;
-        float u = 0.5f * (ray.direction.x + 1.0f);
-        float v = 0.5f * (ray.direction.y + 1.0f);
-        cache.colour = texture.getUV(u, v);
-        cache.intensity = 1;
+        Vector3 d = Vector3() - ray.direction;
+        float u = 0.5f + atan2f(d.z, d.x) / (2 * M_PI);
+        float v = 0.5f - asinf(d.y) / M_PI;
+        best.emission = texture.getUV(u, v);
+        best.albedo = Vector3(0, 0, 0);
+        out = best;
         return false;
     } else { // Compute colour and intensity at intersection point and new ray
-        best.shape->getMaterial()->transformRay(ray, rays, best);
+        best.shape->getMaterial()->transformRay(ray, best);
         Vector3 uv = best.shape->getUV(best.intersectionPoint);
-        best.shape->getMaterial()->getColour(cache.intensity, cache.colour, uv);
+        best.shape->getMaterial()->getColour(best.emission, best.albedo, uv);
+        out = best;
         return true;
     }
 }
 
-// This function returns the colour of a single path trace (With recursive rays)
 Vector3 World::trace(Ray ray, int max) {
-    int actualBounces = -1;
-    ColourCache caches[max];
-    std::vector<Ray> rays = std::vector<Ray>();
+    Vector3 throughput(1, 1, 1);
+    Vector3 final(0, 0, 0);
+    HitRecord cur = HitRecord(nullptr, ray);
     for(int i=0; i<max; i++){
-        actualBounces++;
-        if(!colour(ray,caches[i], rays)) break;
-//        if(max - i - 1 <= 0){
-//            for(int j=0; j<rays.size(); j++){
-//                Vector3 recursiveRes = trace(rays[j], max - i - 1);
-//                caches[i].colour.mix(recursiveRes, 0.5f);
-//            }
-//        };
-        rays = std::vector<Ray>();
+        if(!colour(ray, cur)){
+            Vector3 a = throughput * cur.emission;
+            final += a;
+            break;
+        }
+        Vector3 a = throughput * cur.emission;
+        final += a;
+        throughput *= cur.albedo;
     }
-    Vector3 finalColour = caches[actualBounces].colour;
-    for(int i=actualBounces-1; i>=0; i--){
-        finalColour.mix(caches[i].colour, caches[i].intensity);
-    }
-    return finalColour;
+    return final;
 }
 
 // Renders out the entire scene

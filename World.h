@@ -14,7 +14,7 @@ private:
     float aspect;
     Texture& texture;
     std::vector<Shape *> shapes;
-    bool colour(Ray&, ColourCache&, std::vector<Ray>&);
+    bool colour(Ray& ray, HitRecord& out);
 public:
     World(int, int, Texture&, int = 5, int = 5);
     ~World();

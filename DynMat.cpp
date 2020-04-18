@@ -5,11 +5,11 @@
 #include "DynMat.h"
 
 
-DynMat::DynMat(float d, float r, Texture t) : diffuse(d), reflectiveness(r), texture(t) {
+DynMat::DynMat(float d, float r, Texture t, Vector3 e) : diffuse(d), reflectiveness(r), texture(t), emission(e) {
 
 }
 
-void DynMat::transformRay(Ray &ray, std::vector<Ray> &rays, HitRecord &rec) {
+void DynMat::transformRay(Ray &ray, HitRecord &rec) {
     Vector3 rayOrigin = ray.direction;
     Vector3 a = rec.normal * rec.normal.dot(rec.ray.direction) * 2;
     Vector3 reflection = rayOrigin - a;
@@ -24,7 +24,7 @@ void DynMat::transformRay(Ray &ray, std::vector<Ray> &rays, HitRecord &rec) {
 
 }
 
-void DynMat::getColour(float &outIntensity, Vector3 &outColour, Vector3 &uv) {
-    outIntensity = 1 - reflectiveness;
+void DynMat::getColour(Vector3& outEmission, Vector3 &outColour, Vector3 &uv) {
+    outEmission = emission;
     outColour = texture.getUV(uv.x, uv.y);
 }

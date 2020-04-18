@@ -17,7 +17,7 @@ Vector3::Vector3(float x, float y, float z) {
     this->z = z;
 }
 
-Vector3 Vector3::operator+(Vector3 &a) {
+const Vector3 Vector3::operator+(Vector3 &a) const {
     return Vector3(x + a.x, y + a.y, z + a.z);
 }
 
@@ -27,7 +27,7 @@ void Vector3::operator+=(Vector3 &a) {
     z += a.z;
 }
 
-Vector3 Vector3::operator-(Vector3 &a) {
+const Vector3 Vector3::operator-(Vector3 &a) const {
     return Vector3(x - a.x, y - a.y, z - a.z);
 }
 
@@ -37,7 +37,7 @@ void Vector3::operator-=(Vector3 &a) {
     z -= a.z;
 }
 
-Vector3 Vector3::operator/(Vector3 &a) {
+const Vector3 Vector3::operator/(Vector3 &a) const {
     return Vector3(x / a.x, y / a.y, z / a.z);
 }
 
@@ -47,7 +47,7 @@ void Vector3::operator/=(Vector3 &a) {
     z /= a.z;
 }
 
-Vector3 Vector3::operator*(Vector3 &a) {
+const Vector3 Vector3::operator*(Vector3 &a) const {
     return Vector3(x * a.x, y * a.y, z * a.z);
 }
 
@@ -57,19 +57,19 @@ void Vector3::operator*=(Vector3 &a) {
     z *= a.z;
 }
 
-Vector3 Vector3::operator+(float a) {
+const Vector3 Vector3::operator+(float a) const {
     return Vector3(x + a, y + a, z + a);
 }
 
-Vector3 Vector3::operator-(float a) {
+const Vector3 Vector3::operator-(float a) const {
     return Vector3(x - a, y - a, z - a);
 }
 
-Vector3 Vector3::operator/(float a) {
+const Vector3 Vector3::operator/(float a) const {
     return Vector3(x / a, y / a, z / a);
 }
 
-Vector3 Vector3::operator*(float t) {
+const Vector3 Vector3::operator*(float t) const {
     return Vector3(x * t, y * t, z * t);
 }
 
@@ -79,7 +79,7 @@ void Vector3::mix(Vector3& a, float t){
     z = z + (a.z - z) * t;
 }
 
-Vector3 Vector3::reflect(Vector3& a) {
+const Vector3 Vector3::reflect(Vector3& a) const {
     Vector3 b = a * 2.0 * dot(a);
     return *this - b;
 }
@@ -95,31 +95,31 @@ void Vector3::refract(Vector3 &a, float t) {
     *this = disc > 0.0f ? ret - other : Vector3();
 }
 
-float Vector3::dot(Vector3 &a) {
+float Vector3::dot(Vector3 &a) const {
     return x * a.x + y * a.y + z * a.z;
 }
 
 
-float Vector3::dist(Vector3 &a) {
+float Vector3::dist(Vector3 &a) const {
     return sqrtf(powf(x - a.x, 2) + powf(y * a.y, 2) + powf(z * a.z, 2));
 }
 
-float Vector3::length() {
+float Vector3::length() const {
     return sqrtf(lengthSq());
 }
 
-float Vector3::lengthSq() {
+float Vector3::lengthSq() const {
     return x * x + y * y + z * z;
 }
 
-Vector3 Vector3::cross(Vector3 &a) {
+const Vector3 Vector3::cross(Vector3 &a) const {
     return Vector3(
             y * a.z - z * a.z,
             z * a.x - x * a.z,
             x * a.y - y * a.x);
 }
 
-Vector3 Vector3::toUnitVector() {
+const Vector3 Vector3::toUnitVector() const {
     float t = length();
     return Vector3(x / t, y / t, z / t);
 }

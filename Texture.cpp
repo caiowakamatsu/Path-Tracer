@@ -16,9 +16,9 @@ Texture::Texture(char *path) : width(0), height(0), channels(0) {
     std::cout << width * height << std::endl;
     for(int i=0; i<width * height; i++){
         int index = ((i / width) * width + i % width) * 3;
-        int r = (int) image[index];
-        int g = (int) image[index+1];
-        int b = (int) image[index+2];
+        unsigned char r = image[index];
+        unsigned char g = image[index+1];
+        unsigned char b = image[index+2];
         data[i] = (r << 16 | g << 8 | b) ^ 0x00ffffff;
     }
     textured = true;
