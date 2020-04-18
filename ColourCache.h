@@ -8,10 +8,9 @@
 class ColourCache {
 public:
     Vector3 colour{};
-    int intensity{};
-    bool a = false; // For null termination in trace function
+    float intensity{};
     ColourCache() = default;
-    ColourCache(Vector3 c, int i){
+    ColourCache(Vector3 c, float i){
         colour = c;
         intensity = i;
     }

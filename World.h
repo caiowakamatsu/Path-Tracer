@@ -6,15 +6,17 @@
 #include "Camera.h"
 #include "ColourCache.h"
 #include <vector>
+#include "Texture.h"
 
 class World {
 private:
     int width, height, maxBounce, maxRefraction;
     float aspect;
+    Texture& texture;
     std::vector<Shape *> shapes;
     bool colour(Ray&, ColourCache&, std::vector<Ray>&);
 public:
-    World(int, int, int = 5, int = 5);
+    World(int, int, Texture&, int = 5, int = 5);
     ~World();
     void addShape(Shape *);
     void render(int*);

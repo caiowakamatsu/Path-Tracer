@@ -6,7 +6,7 @@
 #include "iostream"
 #include "World.h"
 
-World::World(int w, int h, int m, int r){
+World::World(int w, int h, Texture& t, int m, int r) : texture(t) {
     width = w;
     height = h;
     maxBounce = m;
@@ -32,17 +32,17 @@ bool World::colour(Ray& ray, ColourCache& cache, std::vector<Ray>& rays) {
     }
 
     if(!best.hit){ // This runs if there was no intersection, and it hit the skyyyyyy
-        // Todo: replace with skybox to make look hecka cool
-        float t = 0.5f * (ray.direction.y + 1.0f);
-        Vector3 max = Vector3(1, 1, 1) * (1 - t);
-        Vector3 min = Vector3(0, 0, 1) * t;
-        cache.colour = max + min;
+//        cache.colour = Vector3(1, 1, 1);
+//        cache.intensity = 1;
+        float u = 0.5f * (ray.direction.x + 1.0f);
+        float v = 0.5f * (ray.direction.y + 1.0f);
+        cache.colour = texture.getUV(u, v);
         cache.intensity = 1;
         return false;
     } else { // Compute colour and intensity at intersection point and new ray
         best.shape->getMaterial().transformRay(ray, rays, best);
-        cache.colour = best.shape->getMaterial().colour;
-        cache.intensity = 1;
+        Vector3 uv = best.shape->getUV(best.intersectionPoint);
+        best.shape->getMaterial().getColour(cache.intensity, cache.colour, uv);
         return true;
     }
 }
@@ -55,22 +55,24 @@ Vector3 World::trace(Ray ray, int max) {
     for(int i=0; i<max; i++){
         actualBounces++;
         if(!colour(ray,caches[i], rays)) break;
-        for(int j=0; j<rays.size(); j++){
-            Vector3 recursiveRes = trace(rays[j], max - i - 1);
-            caches[i].colour.mix(recursiveRes, 0.5f);
-        }
+//        if(max - i - 1 <= 0){
+//            for(int j=0; j<rays.size(); j++){
+//                Vector3 recursiveRes = trace(rays[j], max - i - 1);
+//                caches[i].colour.mix(recursiveRes, 0.5f);
+//            }
+//        };
         rays = std::vector<Ray>();
     }
     Vector3 finalColour = caches[actualBounces].colour;
     for(int i=actualBounces-1; i>=0; i--){
-        finalColour.mix(caches[i].colour, 0.5f);
+        finalColour.mix(caches[i].colour, caches[i].intensity);
     }
     return finalColour;
 }
 
 // Renders out the entire scene
 void World::render(int* out) {
-    auto camera = Camera(new Vector3(0, 5, 20), new Vector3(0, 0, -1), 30, aspect);
+    auto camera = Camera(new Vector3(0, 0, 20), new Vector3(0, 0, -1), 30, aspect);
     Ray ray;
     for(int x=0; x<width; x++){
         for(int y=0; y<height; y++){

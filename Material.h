@@ -7,6 +7,7 @@
 #include "Ray.h"
 #include "HitRecord.h"
 #include <vector>
+#include "Texture.h"
 
 class Material {
 public:
@@ -15,8 +16,11 @@ public:
     float absorb;
     bool refract;
     float ref_index;
-    Material(Vector3, float, float, bool, float = 1);
+    Texture* texture;
+    Material(Vector3, float, float, bool, float = 1, Texture* = nullptr);
+    ~Material();
     void transformRay(Ray&, std::vector<Ray>&, HitRecord&);
+    void getColour(float& outIntensity, Vector3& outColour, Vector3& uv);
 private:
     bool canrefract(Vector3&, Vector3&, float, Vector3&);
 };

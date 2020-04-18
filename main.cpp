@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <cstddef>
 #include "File.h"
 #include "World.h"
 #include "Vector3.h"
@@ -7,6 +8,9 @@
 #include "Sphere.h"
 #include "Material.h"
 #include <GL/glut.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#include "Texture.h"
 
 constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 10;
 
@@ -18,6 +22,8 @@ constexpr float ASPECT = (float) WIDTH / (float) HEIGHT;
 
 int* pixels;
 
+
+
 void display(){
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -28,10 +34,14 @@ void display(){
 
 int main(int argc, char **argv) {
 
+    char* p = {"../skybox/shanghai_bund.jpg"};
+//    char* p = {"../skybox/small_cathedral.jpg"};
+    Texture t = Texture(p);
     pixels = new int[WIDTH * HEIGHT]{0};
-    auto world = World(WIDTH, HEIGHT, MAX_BOUNCES);
-    world.addShape(new Sphere(Vector3(0, 7, -1), 5, Material(Vector3(0, 0, 1), 0, 0, true)));
-    world.addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(0.75, 0.25, 0.05), 0.01, 0, false)));
+    auto world = World(WIDTH, HEIGHT, t, MAX_BOUNCES);
+//    world.addShape(new Sphere(Vector3(0, 0, -1), 5, Material(Vector3(0.2, 0.45, 1), 0, 0, false)));
+//    world.addShape(new Sphere(Vector3(0, 0, 20), 10, Material(Vector3(1, 1, 1), 0, 1, false)));
+//    world.addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(0.75, 0.25, 0.05), 0, 0, false)));
 
     auto start = std::chrono::high_resolution_clock::now();
     world.render(pixels);
@@ -39,6 +49,7 @@ int main(int argc, char **argv) {
     auto elapsed = end - start;
     printf("Total Execution Time %.2fms\n",
             std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() / 1000000.0f);
+
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
