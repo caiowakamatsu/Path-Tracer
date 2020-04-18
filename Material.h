@@ -11,16 +11,6 @@
 
 class Material {
 public:
-    Vector3 colour;
-    float roughness;
-    float absorb;
-    bool refract;
-    float ref_index;
-    Texture* texture;
-    Material(Vector3, float, float, bool, float = 1, Texture* = nullptr);
-    ~Material();
-    void transformRay(Ray&, std::vector<Ray>&, HitRecord&);
-    void getColour(float& outIntensity, Vector3& outColour, Vector3& uv);
-private:
-    bool canrefract(Vector3&, Vector3&, float, Vector3&);
+    virtual void transformRay(Ray&, std::vector<Ray>&, HitRecord&) = 0;
+    virtual void getColour(float& outIntensity, Vector3& outColour, Vector3& uv) = 0;
 };

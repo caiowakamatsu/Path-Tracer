@@ -9,14 +9,14 @@
 
 class Sphere : public Shape {
 public:
-    Sphere(Vector3, float, Material);
+    Sphere(Vector3, float, Material*);
     Vector3 origin;
     float radius;
-    Material mat;
+    Material* mat;
     void intersect(Ray &, HitRecord &) override;
     Vector3 getNormal(Vector3 &) override;
     Vector3 getUV(Vector3 &) override;
-    Material& getMaterial() override;
+    Material* getMaterial() override;
     ~Sphere();
 private:
     float radius2;

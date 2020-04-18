@@ -11,6 +11,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Texture.h"
+#include "DynMat.h"
 
 constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 10;
 
@@ -34,12 +35,12 @@ void display(){
 
 int main(int argc, char **argv) {
 
-    char* p = {"../skybox/shanghai_bund.jpg"};
+    char* p = "../skybox/shanghai_bund.jpg";
 //    char* p = {"../skybox/small_cathedral.jpg"};
     Texture t = Texture(p);
     pixels = new int[WIDTH * HEIGHT]{0};
     auto world = World(WIDTH, HEIGHT, t, MAX_BOUNCES);
-//    world.addShape(new Sphere(Vector3(0, 0, -1), 5, Material(Vector3(0.2, 0.45, 1), 0, 0, false)));
+    world.addShape(new Sphere(Vector3(0, 0, -1), 5, new DynMat(0, 0.5, Texture(1, 1, 1))));
 //    world.addShape(new Sphere(Vector3(0, 0, 20), 10, Material(Vector3(1, 1, 1), 0, 1, false)));
 //    world.addShape(new Sphere(Vector3(0, -1000.5f, -1), 1000.0f, Material(Vector3(0.75, 0.25, 0.05), 0, 0, false)));
 

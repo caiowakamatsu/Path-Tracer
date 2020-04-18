@@ -6,7 +6,7 @@
 #include "Vector3.h"
 #include <cmath>
 
-Sphere::Sphere(Vector3 origin, float radius, Material m) : mat(m) {
+Sphere::Sphere(Vector3 origin, float radius, Material* m) : mat(m) {
     this->origin = origin;
     this->radius = radius;
     this->radius2 = radius * radius;
@@ -35,7 +35,7 @@ void Sphere::intersect(Ray & ray, HitRecord & record) {
     }
 }
 
-Material& Sphere::getMaterial() {
+Material* Sphere::getMaterial() {
     return mat;
 }
 

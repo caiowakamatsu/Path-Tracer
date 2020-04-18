@@ -40,9 +40,9 @@ bool World::colour(Ray& ray, ColourCache& cache, std::vector<Ray>& rays) {
         cache.intensity = 1;
         return false;
     } else { // Compute colour and intensity at intersection point and new ray
-        best.shape->getMaterial().transformRay(ray, rays, best);
+        best.shape->getMaterial()->transformRay(ray, rays, best);
         Vector3 uv = best.shape->getUV(best.intersectionPoint);
-        best.shape->getMaterial().getColour(cache.intensity, cache.colour, uv);
+        best.shape->getMaterial()->getColour(cache.intensity, cache.colour, uv);
         return true;
     }
 }

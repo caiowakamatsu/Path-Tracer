@@ -13,7 +13,7 @@ struct HitRecord;
 
 class Shape {
 public:
-    virtual Material& getMaterial() = 0;
+    virtual Material* getMaterial() = 0;
     virtual Vector3 getNormal(Vector3 &) = 0;
     virtual Vector3 getUV(Vector3 &) = 0;
     virtual void intersect(Ray &, HitRecord&) = 0;
