@@ -24,7 +24,8 @@ void DynMat::transformRay(Ray &ray, HitRecord &rec) {
 
 }
 
-void DynMat::getColour(Vector3& outEmission, Vector3 &outColour, Vector3 &uv) {
+void DynMat::getColour(Vector3& outEmission, Vector3 &outColour, Vector3 &uv, float& reflectiveness, HitRecord& rec) {
     outEmission = emission;
     outColour = texture.getUV(uv.x, uv.y);
+    reflectiveness = this->reflectiveness;
 }

@@ -19,7 +19,9 @@ public:
     }
     bool hit;
     float distance;
+    float reflectiveness;
     Ray ray;
+    Ray outRay;
     Vector3 emission;
     Vector3 albedo;
     Shape* shape;

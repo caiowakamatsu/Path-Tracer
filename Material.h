@@ -12,5 +12,5 @@
 class Material {
 public:
     virtual void transformRay(Ray& ray, HitRecord& rec) = 0;
-    virtual void getColour(Vector3& outEmission, Vector3& outColour, Vector3& uv) = 0;
+    virtual void getColour(Vector3& outEmission, Vector3& outColour, Vector3& uv, float& reflectiveness, HitRecord& rec) = 0;
 };
