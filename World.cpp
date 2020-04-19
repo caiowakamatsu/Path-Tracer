@@ -38,6 +38,8 @@ bool World::colour(Ray& ray, HitRecord& out) {
         float u = 0.5f + atan2f(d.z, d.x) / (2 * M_PI);
         float v = 0.5f - asinf(d.y) / M_PI;
         best.emission = texture.getUV(u, v);
+        best.albedo = Vector3(0, 0, 0);
+        best.reflectiveness = 0;
         out = best;
         return false;
     } else { // Compute colour and intensity at intersection point and new ray
@@ -71,30 +73,24 @@ Vector3 World::trace(Ray ray, int max) {
 }
 
 // Renders out the entire scene
-void World::render(int* out) {
-
+void World::render(int* out, int threads) {
     auto camera = Camera(new Vector3(0, 0, 20), new Vector3(0, 0, -1), 30, aspect);
     Ray ray;
-    #pragma omp parallel
-    {
-        #pragma omp for
-        for(int x=0; x<width; x++){
-            for(int y=0; y<height; y++){
-                Vector3 sample(0, 0, 0);
-                for(int i=0; i<spp; i++){
-                    ray = camera.getRay(
-                            ((float) x + drand48()) / width * 2 - 1,
-                            ((float) y + drand48()) / height * 2 - 1);
-                    Vector3 aa_sample = trace(ray, maxBounce);
-                    sample += aa_sample;
-                }
-                out[x + (height-y-1) * width] =
-                        255 << 24 |
-                        (((int) (((sample.z / spp)) * 255))&0x0ff) << 16 |
-                        (((int) (((sample.y / spp)) * 255))&0x0ff) << 8 |
-                        (((int) (((sample.x / spp)) * 255))&0x0ff) << 0;
+    for(int x=0; x<width; x++){
+        for(int y=0; y<height; y++){
+            Vector3 sample = Vector3(0, 0, 0);
+            for(int i=0; i<spp; i++){
+                ray = camera.getRay(
+                        (static_cast<float>(x) + drand48()) / width * 2 - 1,
+                        (static_cast<float>(y) + drand48()) / height * 2 - 1);
+                Vector3 aa_sample = trace(ray, maxBounce);
+                sample += aa_sample;
             }
+            out[x + (height - y - 1) * width] =
+                    255 << 24 |
+                    (static_cast<int>(sqrtf(sample.z / spp) * 255.0f) << 16) |
+                    (static_cast<int>(sqrtf(sample.y / spp) * 255.0f) << 8) |
+                    (static_cast<int>(sqrtf(sample.x / spp) * 255.0f) << 0);
         }
     }
-
 }
