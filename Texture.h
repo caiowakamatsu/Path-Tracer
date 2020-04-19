@@ -15,7 +15,7 @@ private:
     bool textured = false;
     Vector3 colour;
 public:
-    Texture() = default;
+    Texture();
     Texture(float r, float g, float b);
     Texture(const char* path, float xd = 0, float yd = 0);
     Vector3 getUV(float u, float v);

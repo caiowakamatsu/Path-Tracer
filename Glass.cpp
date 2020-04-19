@@ -10,7 +10,8 @@ Glass::Glass(float r) : refIndex(r) {
 
 void Glass::transformRay(Ray &ray, HitRecord &record) {
     Vector3 outwardNormal;
-    Vector3 reflected = ray.direction.reflect(record.normal);
+    Vector3 rayOrigin = ray.direction;
+    Vector3 reflected = rayOrigin - record.normal * record.normal.dot(record.ray.direction) * 2;
     float nit;
     float cosine;
     if(ray.direction.dot(record.normal) > 0){
@@ -27,13 +28,13 @@ void Glass::transformRay(Ray &ray, HitRecord &record) {
     if(refract(ray.direction, outwardNormal, nit, refracted)){
         reflectChance = schlick(cosine, refIndex);
     } else {
-        ray = Ray(record.intersectionPoint, reflected);
         reflectChance = 1;
     }
-    if(drand48() < reflectChance) {
-        ray = Ray(record.intersectionPoint, reflected);
+//    if(drand48() < reflectChance) {
+    if(false) {
+        ray = Ray(record.intersectionPoint + outwardNormal * 0.0001f, reflected);
     } else {
-        ray = Ray(record.intersectionPoint + outwardNormal * -0.1f, refracted);
+        ray = Ray(record.intersectionPoint + outwardNormal * -0.0001f, refracted);
     }
 }
 
@@ -49,12 +50,12 @@ bool Glass::refract(Vector3 &v, Vector3 &n, float nit, Vector3 &refracted) {
 }
 void Glass::getColour(Vector3 &outEmission, Vector3 &outColour, Vector3 &uv, float &reflectiveness, HitRecord &rec) {
     outEmission = Vector3(0, 0, 0);
-    outColour = Vector3(0, 0, 0);
+    outColour = Vector3(1, 1, 1);
     reflectiveness = 1;
 }
 
 float Glass::schlick(float cosine, float refIndex) {
     float r0 = (1.0f - refIndex) / (1.0f + refIndex);
     r0 = r0 * r0;
-    return r0 + 1.0f - r0 * powf((1 - cosine), 5);
+    return r0 + (1.0f - r0) * powf((1 - cosine), 5);
 }

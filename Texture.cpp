@@ -6,8 +6,16 @@
 #include <iostream>
 #include <cmath>
 
+Texture::Texture(){
+    colour = Vector3(0, 0, 0);
+    xd = 0;
+    yd = 0;
+}
+
 Texture::Texture(float r, float g, float b){
     colour = Vector3(r, g, b);
+    xd = 0;
+    yd = 0;
 }
 
 Texture::Texture(const char *path, float xDelta, float yDelta) : width(0), height(0), channels(0), xd(xDelta), yd(yDelta) {
