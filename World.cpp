@@ -98,7 +98,7 @@ void World::renderChunk(int id, int* out, Camera& cam){
                 Vector3 aa_sample = trace(ray, maxBounce);
                 sample += aa_sample;
             }
-            out[x + (height - y - 1) * width] =
+            out[x + y * width] =
                     255 << 24 |
                     (static_cast<int>(sqrtf(sample.z / spp) * 255.0f) << 16) |
                     (static_cast<int>(sqrtf(sample.y / spp) * 255.0f) << 8) |
@@ -116,7 +116,7 @@ void World::renderChunks(std::vector<int> ids, int *out, Camera &cam) {
 
 // Renders out the entire scene
 void World::render(int* out, int threads) {
-    auto cam = Camera(new Vector3(0, 0, 20), new Vector3(0, 0, -1), 30, aspect);
+    auto cam = Camera(Vector3(0, 0, 20), Vector3(0, 0, 0), 30, aspect);
     const auto processor_count = std::thread::hardware_concurrency();
     if(processor_count * 2 - 2 < threads){
         std::cout << "[WARN] Specified more threads than machine has forcing down to " << processor_count * 2 - 2 << " threads." << std::endl;

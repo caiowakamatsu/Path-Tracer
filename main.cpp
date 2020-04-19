@@ -13,8 +13,9 @@
 #include "Lambertian.h"
 #include "Glass.h"
 #include <thread>
+#include "Triangle.h"
 
-constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 64, SPP = 4;
+constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 4, SPP = 64;
 
 int* pixels;
 
@@ -44,13 +45,15 @@ int main(int argc, char **argv) {
 //    const char* p = "../skybox/shanghai_bund.jpg";
 //    const char* p = {"../skybox/adams_place_bridge.jpg"};
     pixels = new int[WIDTH * HEIGHT]{0};
-    Texture t = Texture(p);
+    Texture t = Texture();
     auto world = World(WIDTH, HEIGHT, t, MAX_BOUNCES, SPP);
-    world.addShape(new Sphere(Vector3(0, 0, 2), 5, new Glass(1.5f)));
+//    world.addShape(new Sphere(Vector3(0, 0, 20), 5, new Glass(1.5f)));
+//    world.addShape(new Sphere(Vector3(0, 0, 0), 4, new DynMat(0, 0, Texture(), Vector3(1, 1, 1))));
 //    world.addShape(new Sphere(Vector3(0, 0, 2), 5, new DynMat(0, 1, Texture(1.0, 1.0, 1.0))));
 //    world.addShape(new Sphere(Vector3(-5, 0, 2), 4, new DynMat(0, 1, Texture(1, 0.7, 0.1))));
 //    world.addShape(new Sphere(Vector3(0, -2, 2), 2, new DynMat(0.06, 0.5, Texture(), Vector3(1, 0.7, 0.1))));
-//    world.addShape(new Sphere(Vector3(0, -1006, -1), 1000, new Lambertian(Texture(1, 1, 1))));
+    world.addShape(new Sphere(Vector3(0, -1006, -1), 1000, new Lambertian(Texture(Texture::CHECKERBOARD, Vector3(0, 0, 0), Vector3(1, 1, 1)))));
+    world.addShape(new Triangle(Vector3(7, 0, -1), Vector3(0, -4.5f, -1), Vector3(-3, 3, -1), new Lambertian(Texture(1, 1, 1), Vector3(1, 1, 1))));
 
     std::thread renderThread(renderAsync, std::ref(world));
     glutInit(&argc, argv);
