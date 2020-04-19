@@ -10,12 +10,13 @@
 
 class World {
 private:
-    int width, height, maxBounce, spp;
+    int width, height, maxBounce, spp, chunkSizeX, chunkSizeY, chunkCountX, chunkCountY;
     float aspect;
     Texture& texture;
     std::vector<Shape *> shapes;
     bool colour(Ray& ray, HitRecord& out);
-    void renderChunk();
+    void renderChunk(int chunkID, int* out, Camera& cam);
+    void renderChunks(std::vector<int> ids, int* out, Camera& cam);
 public:
     World(int, int, Texture&, int = 4, int = 1);
     ~World();

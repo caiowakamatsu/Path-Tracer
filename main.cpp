@@ -14,7 +14,7 @@
 #include "Glass.h"
 #include <thread>
 
-constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 4, SPP = 8;
+constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 6, SPP = 64;
 
 int* pixels;
 
@@ -28,7 +28,7 @@ void display(){
 
 void renderAsync(World& world){
     auto start = std::chrono::high_resolution_clock::now();
-    world.render(pixels, 1);
+    world.render(pixels, 16);
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed = end - start;
     printf("Total Execution Time %.2fms\n",
@@ -50,7 +50,6 @@ int main(int argc, char **argv) {
     world.addShape(new Sphere(Vector3(0, -1006, -1), 1000, new Lambertian(Texture(1, 1, 1))));
 
     std::thread renderThread(renderAsync, std::ref(world));
-//    renderThread.join();
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowSize(WIDTH, HEIGHT);
