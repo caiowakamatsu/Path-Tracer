@@ -37,7 +37,7 @@ bool World::colour(Ray& ray, HitRecord& out) {
         Vector3 d = Vector3() - ray.direction;
         float u = 0.5f + atan2f(d.z, d.x) / (2 * M_PI);
         float v = 0.5f - asinf(d.y) / M_PI;
-        best.albedo = texture.getUV(u, v);
+        best.emission = texture.getUV(u, v);
         out = best;
         return false;
     } else { // Compute colour and intensity at intersection point and new ray
@@ -57,7 +57,7 @@ Vector3 World::trace(Ray ray, int max) {
     HitRecord cur = HitRecord(nullptr, ray);
     for(int i=0; i<max; i++){
         if(!colour(ray, cur)){
-            Vector3 a = throughput * cur.albedo;
+            Vector3 a = throughput * cur.emission;
             final += a;
             break;
         }
@@ -90,9 +90,9 @@ void World::render(int* out) {
                 }
                 out[x + (height-y-1) * width] =
                         255 << 24 |
-                        (((int) ((sqrtf(sample.z / spp)) * 255))&0x0ff) << 16 |
-                        (((int) ((sqrtf(sample.y / spp)) * 255))&0x0ff) << 8 |
-                        (((int) ((sqrtf(sample.x / spp)) * 255))&0x0ff) << 0;
+                        (((int) (((sample.z / spp)) * 255))&0x0ff) << 16 |
+                        (((int) (((sample.y / spp)) * 255))&0x0ff) << 8 |
+                        (((int) (((sample.x / spp)) * 255))&0x0ff) << 0;
             }
         }
     }

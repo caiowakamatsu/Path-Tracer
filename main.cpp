@@ -13,7 +13,7 @@
 #include "Lambertian.h"
 #include "Glass.h"
 
-constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 4, SPP = 256;
+constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 4, SPP = 16;
 
 int* pixels;
 
@@ -28,15 +28,19 @@ void display(){
 int main(int argc, char **argv) {
 
 //    const char* p = "../skybox/abandoned_parking.jpg";
-    const char* p = "../skybox/modern_buildings_night.jpg";
+//    const char* p = "../skybox/modern_buildings_night.jpg";
+    const char* p = "../skybox/kloofendal_48d_partly_cloudy.jpg";
 //    const char* p = "../skybox/shanghai_bund.jpg";
 //    const char* p = {"../skybox/adams_place_bridge.jpg"};
     Texture t = Texture(p, 0.5);
     pixels = new int[WIDTH * HEIGHT]{0};
     auto world = World(WIDTH, HEIGHT, t, MAX_BOUNCES, SPP);
-    world.addShape(new Sphere(Vector3(5, 0, -1), 5, new Lambertian(Texture(1, 0.8f, 0.6f))));
-    world.addShape(new Sphere(Vector3(-3, 0, -1), 2, new DynMat(0.01, 0.2, Texture(1, 1, 1))));
+    world.addShape(new Sphere(Vector3(5, 0, -1), 4, new Lambertian(Texture(1, 0.8f, 0.6f))));
+//    world.addShape(new Sphere(Vector3(-5, 0, -1), 4, new Glass(1.5)));
+//    world.addShape(new Sphere(Vector3(0, -2, 6), 2, new DynMat(0, 0.8, Texture(), Vector3(1, 1, 1))));
+//    world.addShape(new Sphere(Vector3(5, 0, -1), 4, new DynMat(0, 0.8, Texture(0.7, 1, 1))));
 //    world.addShape(new Sphere(Vector3(0, -1006, -1), 1000, new DynMat(0.01, 0.2, Texture(1, 1, 1))));
+    world.addShape(new Sphere(Vector3(0, -1006, -1), 1000, new Lambertian(Texture(1, 1, 1))));
 //    world.addShape(new Sphere(Vector3(-8, 0, -1), 7, new DynMat(0, 1, Texture(1, 0.8f, 0.6f))));
 //    world.addShape(new Sphere(Vector3(8, 0, -1), 7, new DynMat(0, 1, Texture(0.6f,1,1))));
 
@@ -52,7 +56,7 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutInitWindowPosition(1920.0f / 2.0f - WIDTH / 2.0f, 1080.0f / 2.0f - HEIGHT / 2.0f);
-    glutCreateWindow("Path Tracer");
+    glutCreateWindow("Ray Tracer");
     glutDisplayFunc(display);
     glutMainLoop();
     return 0;
