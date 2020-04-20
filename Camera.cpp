@@ -14,7 +14,6 @@ Camera::Camera(Vector3 lookfrom, Vector3 lookat, float fov, float aspect) {
     float half_width = aspect * half_height;
     origin = lookfrom;
     Vector3 w = (lookat - lookfrom).toUnitVector();
-    std::cout << w.x << ", " << w.y << ", " << w.z << std::endl;
     Vector3 u = Vector3(0, 1, 0).cross(w).toUnitVector();
     Vector3 v = w.cross(u);
     center = origin + w;

@@ -7,6 +7,7 @@
 #include "ColourCache.h"
 #include <vector>
 #include "Texture.h"
+#include "RenderStack.h"
 
 class World {
 private:
@@ -17,6 +18,7 @@ private:
     bool colour(Ray& ray, HitRecord& out);
     void renderChunk(int chunkID, int* out, Camera& cam);
     void renderChunks(std::vector<int> ids, int* out, Camera& cam);
+    RenderStack renderStack;
 public:
     World(int, int, Texture&, int = 4, int = 1);
     ~World();

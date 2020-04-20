@@ -88,8 +88,6 @@ void World::renderChunk(int id, int* out, Camera& cam){
     int maxY = sy + chunkSizeY;
     for(int x=sx; x<maxX; x++){
         for(int y=sy; y<maxY; y++){
-//    for(int y=sy; y<maxY; y++){
-//        for(int x=sx; y<maxX; x++){
             Vector3 sample = Vector3(0, 0, 0);
             for(int i=0; i<spp; i++){
                 ray = cam.getRay(
@@ -109,25 +107,24 @@ void World::renderChunk(int id, int* out, Camera& cam){
 
 // Method for threads
 void World::renderChunks(std::vector<int> ids, int *out, Camera &cam) {
-    for(auto& id : ids){
-        renderChunk(id, out, cam);
+    while(!renderStack.empty()) {
+        renderChunk(renderStack.pop(), out, cam);
     }
 }
 
 // Renders out the entire scene
 void World::render(int* out, int threads) {
-    auto cam = Camera(Vector3(0, 0, 20), Vector3(0, 0, 0), 30, aspect);
+    auto cam = Camera(Vector3(0, 0, 30), Vector3(0, 0, 0), 30, aspect);
     const auto processor_count = std::thread::hardware_concurrency();
-    if(processor_count * 2 - 2 < threads){
-        std::cout << "[WARN] Specified more threads than machine has forcing down to " << processor_count * 2 - 2 << " threads." << std::endl;
-        threads = processor_count * 2 - 2;
+    if(processor_count < threads){
+        std::cout << "[WARN] Specified more threads than machine has forcing down to " << processor_count << " threads." << std::endl;
+        threads = processor_count;
     }
     std::vector<std::vector<int>> chunksids;
     chunksids.reserve(threads);
-    for(int i=0; i<chunkCountX * chunkCountY; i++){
-        int threadID = i % threads;
-        chunksids[threadID].emplace_back(i);
-    }
+    for(int i=0; i<chunkCountX * chunkCountY; i++)
+        renderStack.push(i);
+
     std::vector<std::thread> renderThreads;
     for(int i=0; i<threads; i++){
         renderThreads.emplace_back(&World::renderChunks, this, chunksids[i], std::ref(out), std::ref(cam));
