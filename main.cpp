@@ -5,7 +5,7 @@
 #include "Vector3.h"
 #include "Sphere.h"
 #include "Material.h"
-#include <GL/glut.h>
+#include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Texture.h"
@@ -20,14 +20,6 @@
 constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 8, SPP = 64;
 
 int* pixels;
-
-void display(){
-    glClearColor(0.0, 0.0, 0.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glDrawPixels(WIDTH, HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-//    glFlush();
-    glutSwapBuffers();
-}
 
 void renderAsync(World& world){
     auto start = std::chrono::high_resolution_clock::now();
@@ -152,14 +144,31 @@ int main(int argc, char **argv) {
 //            }
 
     std::thread renderThread(renderAsync, std::ref(world));
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowSize(WIDTH, HEIGHT);
-    glutInitWindowPosition(1920.0f / 2.0f - WIDTH / 2.0f, 1080.0f / 2.0f - HEIGHT / 2.0f);
-    glutCreateWindow("Path Tracer");
-    glutDisplayFunc(display);
-    glutIdleFunc(display);
-    glutMainLoop();
+
+    GLFWwindow* window;
+
+    if(!glfwInit()){ // I should really make a window class to make this code somewhat cleaner...
+        std::cerr << "Failed to initialize GLFW, is it installed?" << std::endl;
+        return -1;
+    }
+
+    window = glfwCreateWindow(WIDTH, HEIGHT, "Path Tracer", NULL, NULL);
+    if(!window){
+        glfwTerminate();
+        std::cerr << "Failed to created GLFW window, issue with GLFW installation?" << std::endl;
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+
+    while (!glfwWindowShouldClose(window))
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDrawPixels(WIDTH, HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
     renderThread.join();
     delete(pixels);
     return 0;

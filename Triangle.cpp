@@ -13,10 +13,7 @@ Triangle::Triangle(Vector3 v0, Vector3 v1, Vector3 v2, Material* m) {
     material = m;
     unnormalizedNormal = (vertex1 - vertex0).cross(vertex2 - vertex0);
     normal = unnormalizedNormal.toUnitVector();
-    std::cout << "Triangle Normal [x: " << normal.x << ", y: " << normal.y << ", z: " << normal.z << "]" << std::endl;
 }
-
-#define ELIPSON 0.1f
 
 void Triangle::intersect(Ray& ray, HitRecord& rec) {
     rec.shape = this;
