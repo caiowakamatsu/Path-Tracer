@@ -11,12 +11,16 @@ Lambertian::Lambertian(Texture t, Vector3 e) : texture(t), emission(e) {
 }
 
 // Yo highkey dont use this idk whats wrong
+// Hey past me, I should have fixed this. If this turns out to not be correct again im going to cry
 void Lambertian::transformRay(Ray &ray, HitRecord &rec) {
     Vector3 offset = rec.normal * 0.0001f;
     ray.origin = rec.intersectionPoint + offset;
-    Vector3 point = Vector3(drand48() * 2 - 1, drand48() * 2 - 1, drand48() * 2 - 1);
-    point = point.toUnitVector();
-    ray.direction = point;
+    float x = drand48();
+    float y = drand48();
+    float phi = M_PI_2 * x;
+    float cosTheta = 2.0f * y - 1.0f;
+    float a = sqrtf(1.0f - cosTheta * cosTheta);
+    ray.direction = (rec.normal + Vector3(a * cosf(phi), a * sinf(phi), cosTheta)).toUnitVector();
 }
 
 void Lambertian::getColour(Vector3& outEmission, Vector3 &outColour, Vector3 &uv, float& reflectiveness, HitRecord& rec) {
