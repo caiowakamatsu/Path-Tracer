@@ -114,7 +114,7 @@ float Vector3::lengthSq() const {
 
 const Vector3 Vector3::cross(const Vector3 &a) const {
     return Vector3(
-            y * a.z - z * a.z,
+            y * a.z - z * a.y,
             z * a.x - x * a.z,
             x * a.y - y * a.x);
 }
