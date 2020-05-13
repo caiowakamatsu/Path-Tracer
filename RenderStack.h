@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include <stack>
+#include <queue>
 #include <mutex>
 
 class RenderStack {
 private:
     std::mutex mut;
-    std::stack<int> stack;
+    std::queue<int> stack;
 public:
     bool empty(){
         return stack.empty();
@@ -21,9 +21,13 @@ public:
     }
     int pop(){
         std::lock_guard lockGuard(mut);
-        int top = stack.top();
+        int top = stack.front();
         stack.pop();
         return top;
+    }
+    int size(){
+        std::lock_guard lockGuard(mut);
+        return stack.size();
     }
 };
 

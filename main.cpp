@@ -32,105 +32,73 @@ void renderAsync(World& world){
 
 int main(int argc, char **argv) {
 
-//    const char* p = "../skybox/abandoned_parking.jpg";
+    const char* p = "../skybox/abandoned_parking.jpg";
 //    const char* p = "../skybox/modern_buildings_night.jpg";
 //    const char* p = "../skybox/kloofendal_48d_partly_cloudy.jpg";
 //    const char* p = "../skybox/shanghai_bund.jpg";
-    const char* p = {"../skybox/adams_place_bridge.jpg"};
+//    const char* p = {"../skybox/adams_place_bridge.jpg"};
     pixels = new int[WIDTH * HEIGHT]{0};
-    Texture t = Texture();
+    Texture t = Texture(p, .875, 0);
+//    Texture t = Texture();
     auto world = World(WIDTH, HEIGHT, t, MAX_BOUNCES, SPP);
 
-        Vector3 translation(5, -5, -25);
-        Vector3 size(19, 24, 19);
+        Vector3 translation(0, 0, -20);
+        Vector3 size(19, 20, 19);
 
         int scale = 2;
 
-//         Bottom floor
-//        world.addShape(
-//                new Rectangle(
-//                        Vector3((size.x / 2) * scale, -size.y / 2, (size.z / 2) * scale) + translation,
-//                        Vector3((size.x / 2) * scale, -size.y / 2, -(size.z / 2) * scale) + translation,
-//                        Vector3(-(size.x / 2) * scale, -size.y / 2, (size.z / 2) * scale) + translation,
-//                        Vector3(-(size.x / 2) * scale, -size.y / 2, -(size.z / 2) * scale) + translation,
-//                        new Lambertian(Texture(0.7, 0.7, 0.7))));
-//                        new NormalMat(true)));
-
-        world.addShape(
-                new Sphere(Vector3(0, -10005, 0) + translation, 10000,
-                        new Lambertian(Texture(0.7, 0.7, 0.7)))
-//                        new NormalMat(true))
-                );
-//
-//        world.addShape(
-//                new Sphere(Vector3(0, -0, -5), 4, new DynMat(0, 1, Texture(1, 1, 1)))
-//                );
-
-        // Top ceiling
-
-        world.addShape(new Sphere(Vector3(0, 10, 0), 5, new Lambertian(Texture(), Vector3(1, 1, 1))));
-
-//        world.addShape(
-//                new Rectangle(
-//                        Vector3(-size.x / 2, size.y / 2, size.z / 2) + translation,
-//                        Vector3(-size.x / 2, size.y / 2, -size.z / 2) + translation,
-//                        Vector3(size.x / 2, size.y / 2, size.z / 2) + translation,
-//                        Vector3(size.x / 2, size.y / 2, -size.z / 2) + translation,
-//                        new Lambertian(Texture(0.7, 0.7, 0.7))));
-//                        new DynMat(0, 0, Texture(), Vector3(1, 1, 1))));
-//                        new Lambertian(Texture(), Vector3(1, 1, 1))));
-
-/*
-        // Back wall
-        world.addShape(
-                new Rectangle(
-                        Vector3(-size.x / 2, size.y / 2, -size.z / 2) + translation,
-                        Vector3(-size.x / 2, -size.y / 2, -size.z / 2) + translation,
-                        Vector3(size.x / 2, size.y / 2, -size.z / 2) + translation,
-                        Vector3(size.x / 2, -size.y / 2, -size.z / 2) + translation,
-                        new Lambertian(Texture(0.7, 0.7, 0.7))));
-
-        // Left wall
-        world.addShape(
-                new Rectangle(
-                        Vector3(-size.x / 2, -size.y / 2, -size.z / 2) + translation,
-                        Vector3(-size.x / 2, -size.y / 2, size.z / 2) + translation,
-                        Vector3(-size.x / 2, size.y / 2, -size.z / 2) + translation,
-                        Vector3(-size.x / 2, size.y / 2, size.z / 2) + translation,
-                        new Lambertian(Texture(0.9, 0.1, 0.1))));
-
-        // Right wall
-        world.addShape(
-                new Rectangle(
-                        Vector3(size.x / 2, -size.y / 2, size.z / 2) + translation,
-                        Vector3(size.x / 2, -size.y / 2, -size.z / 2) + translation,
-                        Vector3(size.x / 2, size.y / 2, size.z / 2) + translation,
-                        Vector3(size.x / 2, size.y / 2, -size.z / 2) + translation,
-                        new Lambertian(Texture(0.1, 0.9, 0.1))));
-*/
 //        world.addShape(
 //                new Triangle(
-//                        Vector3(0, 0, 0) + translation,
-//                        Vector3(0, 0, 0) + translation,
-//                        Vector3(0, 0, 0) + translation,
-//                        new Lambertian)
-//                )
+//                        Vector3(20, -5, 0) + translation,
+//                        Vector3(20, -5, -20) + translation,
+//                        Vector3(-20, -5, 0) + translation,
+//                        new Lambertian(Texture(.7, .7, .7))
+//                        ));
+
+//         Bottom floor
+        scale *= 3;
+//        world.addShape(
+//            new Rectangle(
+//                    Vector3(-(size.x / 2) * scale, -size.y / 2, (size.z / 2) * scale) + translation,
+//                    Vector3(-(size.x / 2) * scale, -size.y / 2, -(size.z / 2) * scale) + translation,
+//                    Vector3((size.x / 2) * scale, -size.y / 2, (size.z / 2) * scale) + translation,
+//                    Vector3((size.x / 2) * scale, -size.y / 2, -(size.z / 2) * scale) + translation,
+//                    new DynMat(0, 1, Texture(1, 1, 1))));
 
 //        world.addShape(
-//                new Sphere(
-//                        Vector3(0, size.y / 2 + 19.5, 0), 20, new DynMat(0, 0, Texture(), Vector3(1, 1, 1))));
+//                new Triangle(
+//                        Vector3(10, -10, 10),
+//                        Vector3(10, -10, -10),
+//                        Vector3(-10, -10, 10),
+//                        new DynMat(0, 1, Texture(1, 1, 1))));
 
-//        // Top Light
+        world.addShape(
+                new Rectangle(
+                        Vector3((size.x / 2) * scale, -size.y / 2, (size.z / 2) * scale) + translation,
+                        Vector3((size.x / 2) * scale, -size.y / 2, -(size.z / 2) * scale) + translation,
+                        Vector3(-(size.x / 2) * scale, -size.y / 2, (size.z / 2) * scale) + translation,
+                        Vector3(-(size.x / 2) * scale, -size.y / 2, -(size.z / 2) * scale) + translation,
+//                        new DynMat(0, 1, Texture(1, 1, 1))));
+//                        new Glass(1.5f)));
+                        new Lambertian(Texture(0.7, 0.7, 0.7))));
+//                        new NormalMat(true)));1 thoidk
 
-        float lightScale = 12;
 
-//        world.addShape(
-//                new Rectangle(
-//                        Vector3(-size.x / lightScale, size.y / 2 - 0.5f, size.z / lightScale) + translation,
-//                        Vector3(-size.x / lightScale, size.y / 2 - 0.5f, -size.z / lightScale) + translation,
-//                        Vector3(size.x / lightScale, size.y / 2 - 0.5f, size.z / lightScale) + translation,
-//                        Vector3(size.x / lightScale, size.y / 2 - 0.5f, -size.z / lightScale) + translation,
+//        world.addShape(new Sphere(Vector3(0, -1010, 0), 1000, new DynMat(0, 1, Texture(1, 1, 1))));
+
+        scale /=3;
+
+        world.addShape(new Sphere(Vector3(0, 0, 0) + translation, 5, new NormalMat(true)));
+
+        world.addShape(
+                new Rectangle(
+                        Vector3((-size.x / 2) * scale, size.y / 2, (size.z / 2) * scale) + translation,
+                        Vector3((-size.x / 2) * scale, size.y / 2, (-size.z / 2) * scale) + translation,
+                        Vector3((size.x / 2) * scale, size.y / 2, (size.z / 2) * scale) + translation,
+                        Vector3((size.x / 2) * scale, size.y / 2, (-size.z / 2) * scale) + translation,
+//                        new Lambertian(Texture(0.7, 0.7, 0.7))));
 //                        new DynMat(0, 0, Texture(), Vector3(1, 1, 1))));
+                        new Lambertian(Texture(), Vector3(1, 1, 1))));
 
 //    int size = 5;
 //    int start = -1 * (size-1) / 2;
@@ -147,7 +115,6 @@ int main(int argc, char **argv) {
 //                world.addShape(new Sphere(Vector3(x * 7 + drand48() * 2.5, y * 7 + drand48() * 2.5, z * 7 + drand48() * 2.5), drand48() * 2 + 1, mat));
 //            }
 
-    std::thread renderThread(renderAsync, std::ref(world));
 
     GLFWwindow* window;
 
@@ -162,6 +129,9 @@ int main(int argc, char **argv) {
         std::cerr << "Failed to created GLFW window, issue with GLFW installation?" << std::endl;
         return -1;
     }
+
+    std::thread renderThread(renderAsync, std::ref(world));
+
     glfwMakeContextCurrent(window);
 
     while (!glfwWindowShouldClose(window))

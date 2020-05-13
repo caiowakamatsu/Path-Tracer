@@ -10,6 +10,6 @@ class Ray {
 public:
     Ray();
     Ray(Vector3, Vector3);
-    Vector3 origin, direction;
+    Vector3 origin, direction, inverse;
     Vector3 getPoint(float);
 };

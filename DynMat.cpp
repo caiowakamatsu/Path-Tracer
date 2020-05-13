@@ -21,7 +21,6 @@ void DynMat::transformRay(Ray &ray, HitRecord &rec) {
         point = point.toUnitVector();
         ray.direction.mix(point, diffuse);
     }
-
 }
 
 void DynMat::getColour(Vector3& outEmission, Vector3 &outColour, Vector3 &uv, float& r, HitRecord& rec) {

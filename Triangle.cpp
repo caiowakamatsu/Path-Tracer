@@ -11,29 +11,35 @@ Triangle::Triangle(Vector3 v0, Vector3 v1, Vector3 v2, Material* m) {
     vertex1 = v1;
     vertex2 = v2;
     material = m;
-    unnormalizedNormal = (vertex1 - vertex0).cross(vertex2 - vertex0);
-    normal = unnormalizedNormal.toUnitVector();
 }
 
 void Triangle::intersect(Ray& ray, HitRecord& rec) {
     rec.shape = this;
+    Vector3 e_1 = vertex1 - vertex0;
+    Vector3 e_2 = vertex2 - vertex0;
 
-    Vector3 v1v0 = vertex1 - vertex0;
-    Vector3 v2v0 = vertex2 - vertex0;
-    Vector3 r0v0 = ray.origin - vertex0;
+    Vector3 n = e_1.cross(e_2).toUnitVector();
 
-    Vector3 n = v1v0.cross(v2v0);
-    Vector3 q = r0v0.cross(ray.direction);
-    float d = 1.0f / ray.direction.dot(n);
-    float u = d * -q.dot(v2v0);
-    float v = d * q.dot(v1v0);
-    float t = d * -n.dot(r0v0);
+    Vector3 q = ray.direction.cross(e_2);
+    float a = e_1.dot(q);
 
-    if(!(u<0.0 || v<0.0 || (u+v)>1.0)){
-        rec.normal = normal;
-        rec.hit = true;
-        rec.distance = t;
+    if(n.dot(ray.direction) >= 0 || abs(a) <= 0.00001f){
+
+    } else {
+        Vector3 s = (ray.origin - vertex0) / a;
+        Vector3 r = s.cross(e_1);
+
+        float v0b = s.dot(q);
+        float v1b = r.dot(ray.direction);
+        float v2b = 1.0f - v0b - v1b;
+        if(!(v0b < 0.0f || v1b < 0.0f || v2b < 0.0f)){
+            rec.hit = true;
+            rec.distance = e_2.dot(r);
+            rec.intersectionPoint = ray.getPoint(rec.distance);
+            rec.normal = n;
+        }
     }
+
 }
 
 Vector3 Triangle::getNormal(Vector3 &) {

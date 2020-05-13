@@ -1,8 +1,6 @@
 //
 // Created by legend on 3/18/20.
 //
-
-#include <cstdio>
 #include "iostream"
 #include "World.h"
 #include <cmath>
@@ -122,8 +120,26 @@ void World::render(int* out, int threads) {
     }
     std::vector<std::vector<int>> chunksids;
     chunksids.reserve(threads);
-    for(int i=0; i<chunkCountX * chunkCountY; i++)
-        renderStack.push(i);
+    int x = chunkCountX / 2;
+    int y = chunkCountY / 2;
+    bool left = false;
+    bool down = false;
+    int leftToTravel = 1;
+    const int totalChunks = chunkCountX * chunkCountY;
+    renderStack.push(x + y * chunkCountX);
+    while(renderStack.size() <= totalChunks){
+        for(int i=0; i<leftToTravel; i++){
+            y += down ? -1 : 1;
+            renderStack.push(x + y * chunkCountX);
+        }
+        down = !down;
+        for(int i=0; i<leftToTravel; i++){
+            x += left ? -1 : 1;
+            renderStack.push(x + y * chunkCountX);
+        }
+        left = !left;
+        leftToTravel++;
+    }
 
     std::vector<std::thread> renderThreads;
     for(int i=0; i<threads; i++){

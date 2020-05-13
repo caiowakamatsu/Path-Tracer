@@ -17,6 +17,16 @@ Vector3::Vector3(float x, float y, float z) {
     this->z = z;
 }
 
+float& Vector3::operator[](int i) {
+    if(i == 0)
+        return x;
+    if(i == 1)
+        return y;
+    if(i == 2)
+        return z;
+    return x;
+}
+
 const Vector3 Vector3::operator+(const Vector3 &a) const {
     return Vector3(x + a.x, y + a.y, z + a.z);
 }

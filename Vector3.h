@@ -9,6 +9,7 @@ public:
     Vector3();
     Vector3(float, float, float);
 
+    float& operator [] (int i);
     const Vector3 operator + (const Vector3 &a) const;
     void operator += (const Vector3 &a);
     const Vector3 operator - (const Vector3 &a) const;
