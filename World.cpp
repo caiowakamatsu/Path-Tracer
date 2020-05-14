@@ -17,8 +17,8 @@ World::World(int w, int h, Texture& t, int m, int s) : texture(t) {
     aspect = (float) width / height;
 
     // Split the world into different chunks to be rendered
-    chunkCountX = 16; // Ill add a way to do these dynamically or something later
-    chunkCountY = 16;
+    chunkCountX = 32; // Ill add a way to do these dynamically or something later
+    chunkCountY = 32;
     chunkSizeX = width / chunkCountX;
     chunkSizeY = height / chunkCountY;
 
@@ -30,7 +30,7 @@ World::World(int w, int h, Texture& t, int m, int s) : texture(t) {
 World::~World() = default;
 
 void World::addShape(Shape * shapePtr) {
-    shapes.push_back(shapePtr);
+    bvh.shapes.push_back(shapePtr);
 }
 
 // This returns a single ray trace
@@ -38,7 +38,22 @@ bool World::colour(Ray& ray, HitRecord& out) {
     HitRecord best(nullptr, ray);
 
     // Main intersection loop
-    for (auto shape : shapes) {
+    std::vector<Shape*> bvhShapes;
+    bvh.transverse(ray, bvhShapes);
+
+    /*
+    if (!bvhShapes.empty()) {
+        out.albedo = Vector3(0.0, 0, 0);
+        out.reflectiveness = 0;
+        out.emission = Vector3(1, 0, 0);
+        return false;
+    } else {
+        out.albedo = Vector3(0.0, 0, 0);
+        out.reflectiveness = 0;
+        out.emission = Vector3(1, 0, 1);
+        return true;
+    }*/
+    for (auto shape : bvhShapes) {
         HitRecord rec(shape, ray);
         shape->intersect(ray, rec);
         if ((rec.hit && !best.hit) || ((rec.distance < best.distance) && rec.distance != -1.0f)) best = rec;
@@ -61,6 +76,22 @@ bool World::colour(Ray& ray, HitRecord& out) {
         out = best;
         return true;
     }
+}
+
+void World::buildBvh() {
+    // blobsweat
+    Vector3 min, max;
+    for(auto shape : bvh.shapes){
+        AABB shapeBoundingBox = shape->getBoundingBox();
+        min.x = fmin(shapeBoundingBox.min.x, min.x);
+        min.y = fmin(shapeBoundingBox.min.y, min.y);
+        min.z = fmin(shapeBoundingBox.min.z, min.z);
+        max.x = fmax(shapeBoundingBox.max.x, max.x);
+        max.y = fmax(shapeBoundingBox.max.y, max.y);
+        max.z = fmax(shapeBoundingBox.max.z, max.z);
+    }
+    bvh.self = AABB(min, max);
+    bvh.split(50);
 }
 
 // This function returns the colour of a single path trace (With recursive rays)
@@ -123,7 +154,7 @@ void World::renderChunks(std::vector<int> ids, int *out, Camera &cam) {
 
 // Renders out the entire scene
 void World::render(int* out, int threads) {
-    auto cam = Camera(Vector3(200, 220, 200), Vector3(0, 0, 0), 30, aspect);
+    auto cam = Camera(Vector3(50, 70, 50), Vector3(0, 0, 0), 30, aspect);
     const auto processor_count = std::thread::hardware_concurrency() - 2;
     if(processor_count < threads){
         std::cout << "[WARN] Specified more threads than machine has forcing down to " << processor_count << " threads." << std::endl;
@@ -137,6 +168,7 @@ void World::render(int* out, int threads) {
     bool down = false;
     int leftToTravel = 1;
     const int totalChunks = chunkCountX * chunkCountY;
+#ifdef SPIRAL
     renderStack.push(x + y * chunkCountX);
     while(renderStack.size() <= totalChunks){
         for(int i=0; i<leftToTravel; i++){
@@ -151,7 +183,11 @@ void World::render(int* out, int threads) {
         left = !left;
         leftToTravel++;
     }
-
+#else
+    for(int i=0; i<totalChunks; i++){
+        renderStack.push(i);
+    }
+#endif
     std::vector<std::thread> renderThreads;
     for(int i=0; i<threads; i++){
         renderThreads.emplace_back(&World::renderChunks, this, chunksids[i], std::ref(out), std::ref(cam));

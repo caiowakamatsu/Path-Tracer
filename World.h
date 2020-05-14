@@ -8,6 +8,7 @@
 #include <vector>
 #include "Texture.h"
 #include "RenderStack.h"
+#include "BVH.h"
 
 class World {
 private:
@@ -19,10 +20,12 @@ private:
     void renderChunk(int chunkID, int* out, Camera& cam);
     void renderChunks(std::vector<int> ids, int* out, Camera& cam);
     RenderStack renderStack;
+    BVH bvh;
 public:
     World(int, int, Texture&, int = 4, int = 1);
     ~World();
     void addShape(Shape *);
     void render(int*, int threads);
+    void buildBvh();
     Vector3 trace(Ray ray, int);
 };

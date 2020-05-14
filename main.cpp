@@ -19,11 +19,14 @@
 #include "Rectangle.h"
 #include "NormalMat.h"
 
-constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 6, SPP = 4;
+constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 6, SPP = 1;
+
+//#define SPHERES
 
 int* pixels;
 
 void renderAsync(World& world){
+    world.buildBvh();
     auto start = std::chrono::high_resolution_clock::now();
     world.render(pixels, 16);
     auto end = std::chrono::high_resolution_clock::now();
@@ -95,7 +98,7 @@ int main(int argc, char **argv) {
 #endif
 
 #ifdef SPHERES
-    int size = 5;
+    int size = 7;
     int start = -1 * (size-1) / 2;
     int end = size + start;
     for(int x=start; x<end; x++)
@@ -112,7 +115,7 @@ int main(int argc, char **argv) {
 #endif
     // Obj loading time
 
-    std::string inputfile = "../objs/fox.obj";
+    std::string inputfile = "../objs/utah-teapot.obj";
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
@@ -159,8 +162,8 @@ int main(int argc, char **argv) {
                     vertices[1],
                     vertices[2],
 //                    new DynMat(0, 1, Texture(1, 1, 1))
-//                    new NormalMat(true)
-                    foxMat));
+                    new NormalMat(true)));
+//                    foxMat));
             indexOffset += fv;
 
             // per-face material
@@ -180,8 +183,8 @@ int main(int argc, char **argv) {
         std::cerr << "Failed to created GLFW window, issue with GLFW installation?" << std::endl;
         return -1;
     }
-    std::thread renderThread(renderAsync, std::ref(world));
     glfwMakeContextCurrent(window);
+    std::thread renderThread(renderAsync, std::ref(world));
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);

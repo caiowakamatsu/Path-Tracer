@@ -44,11 +44,29 @@ bool AABB::intersect(Ray& ray){
     float tmax = fmax(t1, t2);
 
     for(int i=1; i<3; i++){
-        t1 = (min[1] - ray.origin[i]) * ray.inverse[i];
-        t2 = (max[1] - ray.origin[i]) * ray.inverse[i];
+        t1 = (min[i] - ray.origin[i]) * ray.inverse[i];
+        t2 = (max[i] - ray.origin[i]) * ray.inverse[i];
 
-        tmin = fmin(t1, t2);
-        tmax = fmax(t1, t2);
+        tmin = fmax(tmin, fmin(t1, t2));
+        tmax = fmin(tmax, fmax(t1, t2));
     }
     return tmax > fmax(tmin, 0.0);
 }
+
+
+bool AABB::intersect(AABB &aabb) {
+    for(int i=0; i<3; i++)
+        if(aabb.min[i] > max[i] || aabb.max[i] < min[i]) return false;
+    return true;
+}
+
+float AABB::getAreaRating() {
+    float edge0 = max.x - min.x;
+    float edge1 = max.y - min.y;
+    float edge2 = max.z - min.z;
+    float area = edge0 * edge1;
+    area += edge1 * edge2;
+    area += edge0 * edge2;
+    return area;
+}
+
