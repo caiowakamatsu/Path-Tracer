@@ -44,3 +44,13 @@ Material* Sphere::getMaterial() {
 Vector3 Sphere::getNormal(Vector3& point){
     return (point - this->origin).toUnitVector();
 }
+
+AABB Sphere::getBoundingBox() {
+    float minX = origin.x - radius;
+    float minY = origin.y - radius;
+    float minZ = origin.z - radius;
+    float maxX = origin.x + radius;
+    float maxY = origin.y + radius;
+    float maxZ = origin.z + radius;
+    return AABB(minX, minY, minZ, maxX, maxY, maxZ);
+}

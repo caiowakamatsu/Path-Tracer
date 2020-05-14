@@ -53,3 +53,16 @@ Vector3 Triangle::getNormal(Vector3 &) {
 Material *Triangle::getMaterial() {
     return material;
 }
+
+AABB Triangle::getBoundingBox() {
+    Vector3 a = vertices[0].pos;
+    Vector3 b = vertices[1].pos;
+    Vector3 c = vertices[2].pos;
+    float minX = fmin(a.x, fmin(b.x, c.x));
+    float minY = fmin(a.y, fmin(b.y, c.y));
+    float minZ = fmin(a.z, fmin(b.z, c.z));
+    float maxX = fmax(a.x, fmax(b.x, c.x));
+    float maxY = fmax(a.y, fmax(b.y, c.y));
+    float maxZ = fmax(a.z, fmax(b.z, c.z));
+    return AABB(minX, minY, minZ, maxX, maxY, maxZ);
+}

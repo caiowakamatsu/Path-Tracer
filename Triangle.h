@@ -16,4 +16,5 @@ public:
     void intersect(Ray &, HitRecord &) override;
     Vector3 getNormal(Vector3 &) override;
     Material* getMaterial() override;
+    AABB getBoundingBox() override;
 };
