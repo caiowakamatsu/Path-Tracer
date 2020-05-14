@@ -11,8 +11,8 @@
 
 class World {
 private:
-    int width, height, maxBounce, spp, chunkSizeX, chunkSizeY, chunkCountX, chunkCountY;
-    float aspect;
+    int width, height, maxBounce, spp, sppRt, chunkSizeX, chunkSizeY, chunkCountX, chunkCountY;
+    float aspect, sampleStart, sampleOffset;
     Texture& texture;
     std::vector<Shape *> shapes;
     bool colour(Ray& ray, HitRecord& out);

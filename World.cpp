@@ -6,12 +6,14 @@
 #include <cmath>
 #include <algorithm>
 #include <thread>
+#include <random>
 
 World::World(int w, int h, Texture& t, int m, int s) : texture(t) {
     width = w;
     height = h;
     maxBounce = m;
     spp = s;
+    sppRt = static_cast<int>(sqrt(spp));
     aspect = (float) width / height;
 
     // Split the world into different chunks to be rendered
@@ -19,6 +21,10 @@ World::World(int w, int h, Texture& t, int m, int s) : texture(t) {
     chunkCountY = 16;
     chunkSizeX = width / chunkCountX;
     chunkSizeY = height / chunkCountY;
+
+    float initOffset = sqrtf(spp);
+    sampleStart = 1.0f / (initOffset * 2);
+    sampleOffset = 1.0f / initOffset;
 }
 
 World::~World() = default;
@@ -84,15 +90,20 @@ void World::renderChunk(int id, int* out, Camera& cam){
     int sy = (id / chunkCountY) * chunkSizeY;
     int maxX = sx + chunkSizeX;
     int maxY = sy + chunkSizeY;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dist(0, 1);
     for(int x=sx; x<maxX; x++){
         for(int y=sy; y<maxY; y++){
             Vector3 sample = Vector3(0, 0, 0);
-            for(int i=0; i<spp; i++){
-                ray = cam.getRay(
-                        (static_cast<float>(x) + drand48()) / width * 2 - 1,
-                        (static_cast<float>(y) + drand48()) / height * 2 - 1);
-                Vector3 aa_sample = trace(ray, maxBounce);
-                sample += aa_sample;
+            for(int j=0; j<sppRt; j++){
+                for(int k=0;k<sppRt; k++){
+                    ray = cam.getRay(
+                            (static_cast<float>(x) + dist(gen)) / width * 2 - 1,
+                            (static_cast<float>(y) + dist(gen))/ height * 2 - 1);
+                    Vector3 aa_sample = trace(ray, maxBounce);
+                    sample += aa_sample;
+                }
             }
             out[x + y * width] =
                     255 << 24 |
@@ -112,7 +123,7 @@ void World::renderChunks(std::vector<int> ids, int *out, Camera &cam) {
 
 // Renders out the entire scene
 void World::render(int* out, int threads) {
-    auto cam = Camera(Vector3(0, 0, 30), Vector3(0, 0, 0), 30, aspect);
+    auto cam = Camera(Vector3(200, 250, 200), Vector3(0, 0, 0), 30, aspect);
     const auto processor_count = std::thread::hardware_concurrency();
     if(processor_count < threads){
         std::cout << "[WARN] Specified more threads than machine has forcing down to " << processor_count << " threads." << std::endl;
