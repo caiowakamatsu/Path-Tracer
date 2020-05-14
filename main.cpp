@@ -19,7 +19,7 @@
 #include "Rectangle.h"
 #include "NormalMat.h"
 
-constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 6, SPP = 1;
+constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 6, SPP = 4;
 
 int* pixels;
 
@@ -133,32 +133,34 @@ int main(int argc, char **argv) {
     if (!ret) {
         exit(1);
     }
+
+    Material* foxMat = new Lambertian(Texture("../objs/texture.png"));
+
     for(size_t s=0; s<shapes.size(); s++){
         size_t indexOffset = 0;
         for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
             int fv = shapes[s].mesh.num_face_vertices[f];
 
             // Loop over vertices in the face.
-            Vector3 vertices[3];
+            Vertex vertices[3];
             for (size_t v = 0; v < fv; v++) {
-                // access to vertex
+                // access to Vertex
                 tinyobj::index_t idx = shapes[s].mesh.indices[indexOffset + v];
-                vertices[v] = Vector3(
-                        attrib.vertices[3*idx.vertex_index+0],
+                vertices[v] = Vertex(
+                        Vector3(attrib.vertices[3*idx.vertex_index+0],
                         attrib.vertices[3*idx.vertex_index+1],
-                        attrib.vertices[3*idx.vertex_index+2]);
-                // Optional: vertex colors
-                // tinyobj::real_t red = attrib.colors[3*idx.vertex_index+0];
-                // tinyobj::real_t green = attrib.colors[3*idx.vertex_index+1];
-                // tinyobj::real_t blue = attrib.colors[3*idx.vertex_index+2];
+                        attrib.vertices[3*idx.vertex_index+2]),
+                        attrib.texcoords[2*idx.texcoord_index+0],
+                        attrib.texcoords[2*idx.texcoord_index+1]);
             }
+
             world.addShape(new Triangle(
                     vertices[0],
                     vertices[1],
                     vertices[2],
 //                    new DynMat(0, 1, Texture(1, 1, 1))
-                    new NormalMat(true)
-                        ));
+//                    new NormalMat(true)
+                    foxMat));
             indexOffset += fv;
 
             // per-face material

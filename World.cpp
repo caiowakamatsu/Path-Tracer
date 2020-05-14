@@ -55,7 +55,7 @@ bool World::colour(Ray& ray, HitRecord& out) {
         return false;
     } else { // Compute colour and intensity at intersection point and new ray
         best.shape->getMaterial()->transformRay(ray, best);
-        Vector3 uv = best.shape->getUV(best.intersectionPoint);
+        Vector3 uv = Vector3(best.u, best.v, 0);
         best.outRay = ray;
         best.shape->getMaterial()->getColour(best.emission, best.albedo, uv, best.reflectiveness, best);
         out = best;
@@ -123,8 +123,8 @@ void World::renderChunks(std::vector<int> ids, int *out, Camera &cam) {
 
 // Renders out the entire scene
 void World::render(int* out, int threads) {
-    auto cam = Camera(Vector3(200, 250, 200), Vector3(0, 0, 0), 30, aspect);
-    const auto processor_count = std::thread::hardware_concurrency();
+    auto cam = Camera(Vector3(200, 220, 200), Vector3(0, 0, 0), 30, aspect);
+    const auto processor_count = std::thread::hardware_concurrency() - 2;
     if(processor_count < threads){
         std::cout << "[WARN] Specified more threads than machine has forcing down to " << processor_count << " threads." << std::endl;
         threads = processor_count;

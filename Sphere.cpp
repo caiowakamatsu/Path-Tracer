@@ -31,6 +31,8 @@ void Sphere::intersect(Ray & ray, HitRecord & record) {
             record.distance = t0 < t1 ? t0 : t1;
             record.intersectionPoint = ray.getPoint(record.distance);
             record.normal = getNormal(record.intersectionPoint);
+            record.u = 0.5f + atan2f(record.normal.z, record.normal.x) / (2 * M_PI);
+            record.v = 0.5f - asinf(record.normal.y) / M_PI;
         }
     }
 }
@@ -41,8 +43,4 @@ Material* Sphere::getMaterial() {
 
 Vector3 Sphere::getNormal(Vector3& point){
     return (point - this->origin).toUnitVector();
-}
-
-Vector3 Sphere::getUV(Vector3 & normal) {
-    return Vector3(atan2f(normal.x, normal.z) / (2*M_PI) + 0.5f, normal.y * 0.5f + 0.5f, 0);
 }

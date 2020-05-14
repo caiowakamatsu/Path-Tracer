@@ -4,11 +4,11 @@
 
 #include "Rectangle.h"
 
-Rectangle::Rectangle(Vector3 v0, Vector3 v1, Vector3 v2, Vector3 v3, Material* m) {
+Rectangle::Rectangle(Vertex v0, Vertex v1, Vertex v2, Vertex v3, Material* m) {
     t0 = Triangle(v0, v1, v3, m);
     t1 = Triangle(v2, v0, v3, m);
     material = m;
-    normal = (v1 - v0).cross(v2 - v0).toUnitVector();
+    normal = (v1.pos - v0.pos).cross(v2.pos - v0.pos).toUnitVector();
 }
 
 void Rectangle::intersect(Ray& ray, HitRecord& rec) {
@@ -20,10 +20,6 @@ void Rectangle::intersect(Ray& ray, HitRecord& rec) {
 
 Vector3 Rectangle::getNormal(Vector3& p) {
     return normal;
-}
-
-Vector3 Rectangle::getUV(Vector3 &) {
-    return Vector3();
 }
 
 Material *Rectangle::getMaterial() {

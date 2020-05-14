@@ -6,48 +6,48 @@
 #include <Eigen/Dense>
 #include <iostream>
 
-Triangle::Triangle(Vector3 v0, Vector3 v1, Vector3 v2, Material* m) {
-    vertex0 = v0;
-    vertex1 = v1;
-    vertex2 = v2;
+Triangle::Triangle(Vertex v0, Vertex v1, Vertex v2, Material* m) {
+    vertices[0] = v0;
+    vertices[1] = v1;
+    vertices[2] = v2;
     material = m;
 }
 
 void Triangle::intersect(Ray& ray, HitRecord& rec) {
     rec.shape = this;
-    Vector3 e_1 = vertex1 - vertex0;
-    Vector3 e_2 = vertex2 - vertex0;
 
-    Vector3 n = e_1.cross(e_2).toUnitVector();
+    Vector3 o = vertices[0].pos;
+    Vector3 e0 = vertices[1].pos - o;
+    Vector3 e1 = vertices[2].pos - o;
+    Vector3 intersectionMat[3] = {ray.direction * -1, e0, e1};
 
-    Vector3 q = ray.direction.cross(e_2);
-    float a = e_1.dot(q);
+    Vector3 c01 = intersectionMat[0].cross(intersectionMat[1]);
+    Vector3 c12 = intersectionMat[1].cross(intersectionMat[2]);
+    Vector3 c20 = intersectionMat[2].cross(intersectionMat[0]);
 
-    if(n.dot(ray.direction) >= 0 || abs(a) <= 0.00001f){
+    float det = intersectionMat[0].dot(c12);
+    float inverseDet = 1.0f / det;
 
-    } else {
-        Vector3 s = (ray.origin - vertex0) / a;
-        Vector3 r = s.cross(e_1);
+    Vector3 inverseTransposedMat[3] = { c12*inverseDet, c20*inverseDet, c01*inverseDet };
 
-        float v0b = s.dot(q);
-        float v1b = r.dot(ray.direction);
-        float v2b = 1.0f - v0b - v1b;
-        if(!(v0b < 0.0f || v1b < 0.0f || v2b < 0.0f)){
-            rec.hit = true;
-            rec.distance = e_2.dot(r);
-            rec.intersectionPoint = ray.getPoint(rec.distance);
-            rec.normal = n;
-        }
+    Vector3 dir = ray.origin - o;
+    Vector3 tuv = Vector3(
+            inverseTransposedMat[0].dot(dir),
+            inverseTransposedMat[1].dot(dir),
+            inverseTransposedMat[2].dot(dir));
+
+    if(0 < tuv.x && 0.0f < tuv.y && 0.0f < tuv.z && tuv.y + tuv.z < 1.0f){
+        rec.intersectionPoint = ray.getPoint(tuv.x);
+        rec.distance = tuv.x;
+        rec.u = tuv.y * vertices[1].u + tuv.z * vertices[2].u + (1.0f - tuv.y - tuv.z) * vertices[0].u;
+        rec.v = tuv.y * vertices[1].v + tuv.z * vertices[2].v + (1.0f - tuv.y - tuv.z) * vertices[0].v;
+        rec.normal = e0.cross(e1).toUnitVector();
+        rec.hit = true;
     }
-
 }
 
 Vector3 Triangle::getNormal(Vector3 &) {
     return normal;
-}
-
-Vector3 Triangle::getUV(Vector3& point) {
-    return Vector3(0, 0, 0);
 }
 
 Material *Triangle::getMaterial() {

@@ -20,6 +20,7 @@ public:
     bool hit;
     float distance;
     float reflectiveness;
+    float u, v;
     Ray ray;
     Ray outRay;
     Vector3 emission;

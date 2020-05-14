@@ -35,7 +35,7 @@ THE SOFTWARE.
 // version 1.2.1 : Added initial support for line('l') primitive(PR #178)
 // version 1.2.0 : Hardened implementation(#175)
 // version 1.1.1 : Support smoothing groups(#162)
-// version 1.1.0 : Support parsing vertex color(#144)
+// version 1.1.0 : Support parsing Vertex color(#144)
 // version 1.0.8 : Fix parsing `g` tag just after `usemtl`(#138)
 // version 1.0.7 : Support multiple tex options(#126)
 // version 1.0.6 : Add TINYOBJLOADER_USE_DOUBLE option(#124)
@@ -373,7 +373,7 @@ typedef double real_t;
     struct attrib_t {
         std::vector<real_t> vertices;  // 'v'(xyz)
 
-        // For backward compatibility, we store vertex weight in separate array.
+        // For backward compatibility, we store Vertex weight in separate array.
         std::vector<real_t> vertex_weights;  // 'v'(w)
         std::vector<real_t> normals;         // 'vn'
         std::vector<real_t> texcoords;       // 'vt'(uv)
@@ -381,7 +381,7 @@ typedef double real_t;
         // For backward compatibility, we store texture coordinate 'w' in separate
         // array.
         std::vector<real_t> texcoord_ws;  // 'vt'(w)
-        std::vector<real_t> colors;       // extension: vertex colors
+        std::vector<real_t> colors;       // extension: Vertex colors
 
         attrib_t() {}
 
@@ -478,9 +478,9 @@ typedef double real_t;
     struct ObjReaderConfig {
         bool triangulate;  // triangulate polygon?
 
-        /// Parse vertex color.
-        /// If vertex color is not present, its filled with default value.
-        /// false = no vertex color
+        /// Parse Vertex color.
+        /// If Vertex color is not present, its filled with default value.
+        /// false = no Vertex color
         /// This will increase memory of parsed .obj
         bool vertex_color;
 
@@ -567,7 +567,7 @@ typedef double real_t;
 /// directory.
 /// 'triangulate' is optional, and used whether triangulate polygon face in .obj
 /// or not.
-/// Option 'default_vcols_fallback' specifies whether vertex colors should
+/// Option 'default_vcols_fallback' specifies whether Vertex colors should
 /// always be defined, even if no colors are given (fallback to white).
     bool LoadObj(attrib_t *attrib, std::vector<shape_t> *shapes,
                  std::vector<material_t> *materials, std::string *warn,
@@ -649,7 +649,7 @@ struct face_t {
   unsigned int
       smoothing_group_id;  // smoothing group id. 0 = smoothing groupd is off.
   int pad_;
-  std::vector<vertex_index_t> vertex_indices;  // face vertex indices.
+  std::vector<vertex_index_t> vertex_indices;  // face Vertex indices.
 
   face_t() : smoothing_group_id(0), pad_(0) {}
 };
@@ -987,7 +987,7 @@ static inline void parseV(real_t *x, real_t *y, real_t *z, real_t *w,
   (*w) = parseReal(token, default_w);
 }
 
-// Extension: parse vertex with colors(6 items)
+// Extension: parse Vertex with colors(6 items)
 static inline bool parseVertexWithColor(real_t *x, real_t *y, real_t *z,
                                         real_t *r, real_t *g, real_t *b,
                                         const char **token,
@@ -1458,7 +1458,7 @@ static bool exportGroupsToShape(shape_t *shape, const PrimGroup &prim_group,
             previousRemainingVertices = npolys;
             remainingIterations = npolys;
           } else {
-            // We didn't consume a vertex on previous iteration, reduce the
+            // We didn't consume a Vertex on previous iteration, reduce the
             // available iterations.
             remainingIterations--;
           }
@@ -2232,7 +2232,7 @@ bool LoadObj(attrib_t *attrib, std::vector<shape_t> *shapes,
 
     if (token[0] == '#') continue;  // comment line
 
-    // vertex
+    // Vertex
     if (token[0] == 'v' && IS_SPACE((token[1]))) {
       token += 2;
       real_t x, y, z;
@@ -2287,7 +2287,7 @@ bool LoadObj(attrib_t *attrib, std::vector<shape_t> *shapes,
                          static_cast<int>(vt.size() / 2), &vi)) {
           if (err) {
             std::stringstream ss;
-            ss << "Failed parse `l' line(e.g. zero value for vertex index. "
+            ss << "Failed parse `l' line(e.g. zero value for Vertex index. "
                   "line "
                << line_num << ".)\n";
             (*err) += ss.str();
@@ -2319,7 +2319,7 @@ bool LoadObj(attrib_t *attrib, std::vector<shape_t> *shapes,
                          static_cast<int>(vt.size() / 2), &vi)) {
           if (err) {
             std::stringstream ss;
-            ss << "Failed parse `p' line(e.g. zero value for vertex index. "
+            ss << "Failed parse `p' line(e.g. zero value for Vertex index. "
                   "line "
                << line_num << ".)\n";
             (*err) += ss.str();
@@ -2725,10 +2725,10 @@ bool LoadObjWithCallback(std::istream &inStream, const callback_t &callback,
 
     if (token[0] == '#') continue;  // comment line
 
-    // vertex
+    // Vertex
     if (token[0] == 'v' && IS_SPACE((token[1]))) {
       token += 2;
-      // TODO(syoyo): Support parsing vertex color extension.
+      // TODO(syoyo): Support parsing Vertex color extension.
       real_t x, y, z, w;  // w is optional. default = 1.0
       parseV(&x, &y, &z, &w, &token);
       if (callback.vertex_cb) {
