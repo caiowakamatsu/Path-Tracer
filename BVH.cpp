@@ -21,7 +21,7 @@ void BVH::split(int maxPerNode){
             BVH* currentBVH[2];
             Vector3 offset;
             offset[i] = a;
-            current[0] = AABB(self.min[0], self.min[1], self.min[2], offset[0], offset[1], offset[2]);
+            current[0] = AABB(self.min[0], self.min[1], self.min[2], self.min[0] + offset[0], self.min[1] + offset[1], self.min[2] + offset[2]);
             current[1] = AABB(self.min[0] + offset[0], self.min[1] + offset[1], self.min[2] + offset[2], self.max[0], self.max[1], self.max[2]);
             // Resize both AABB's
             for(int j=0; j<2; j++) {
@@ -38,7 +38,6 @@ void BVH::split(int maxPerNode){
                         max.x = fmax(shapeBoundingBox.max.x, max.x);
                         max.y = fmax(shapeBoundingBox.max.y, max.y);
                         max.z = fmax(shapeBoundingBox.max.z, max.z);
-                        shapes.erase(shapes.begin() + y);
                     }
                     aabb = AABB(min, max);
                     currentBVH[j] = new BVH(aabb);
@@ -49,12 +48,23 @@ void BVH::split(int maxPerNode){
                 currentSurfaceArea = areaRating;
                 currentBest[0] = currentBVH[0];
                 currentBest[1] = currentBVH[1];
+            } else {
+                delete currentBVH[0];
+                delete currentBVH[1];
             }
         }
     }
     for(int i=0; i<2; i++){
         children[i] = currentBest[i];
         if(children[i]->shapes.size() > maxPerNode){
+            for(int y=shapes.size()-1; y>=0; y--){
+                auto shapeSelfPtr = shapes[y];
+                for(auto& shapePtr : children[i]->shapes){
+                    if(shapeSelfPtr == shapePtr){
+                        shapes.erase(shapes.begin() + y);
+                    }
+                }
+            }
             children[i]->split(maxPerNode);
         }
     }

@@ -91,7 +91,8 @@ void World::buildBvh() {
         max.z = fmax(shapeBoundingBox.max.z, max.z);
     }
     bvh.self = AABB(min, max);
-    bvh.split(50);
+    bvh.split(100);
+
 }
 
 // This function returns the colour of a single path trace (With recursive rays)
