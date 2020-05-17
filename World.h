@@ -18,7 +18,7 @@ private:
     std::vector<Shape *> shapes;
     bool colour(Ray& ray, HitRecord& out);
     void renderChunk(int chunkID, int* out, Camera& cam);
-    void renderChunks(std::vector<int> ids, int* out, Camera& cam);
+    void renderChunks(int* out, Camera& cam);
     RenderStack renderStack;
     BVH bvh;
 public:

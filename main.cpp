@@ -28,7 +28,7 @@ int* pixels;
 void renderAsync(World& world){
     world.buildBvh();
     auto start = std::chrono::high_resolution_clock::now();
-    world.render(pixels, 16);
+    world.render(pixels, 14);
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed = end - start;
     printf("Total Execution Time %.2fms\n",

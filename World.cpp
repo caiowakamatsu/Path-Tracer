@@ -17,8 +17,8 @@ World::World(int w, int h, Texture& t, int m, int s) : texture(t) {
     aspect = (float) width / height;
 
     // Split the world into different chunks to be rendered
-    chunkCountX = 32; // Ill add a way to do these dynamically or something later
-    chunkCountY = 32;
+    chunkCountX = 16; // Ill add a way to do these dynamically or something later
+    chunkCountY = 16;
     chunkSizeX = width / chunkCountX;
     chunkSizeY = height / chunkCountY;
 
@@ -38,8 +38,7 @@ bool World::colour(Ray& ray, HitRecord& out) {
     HitRecord best(nullptr, ray);
 
     // Main intersection loop
-    std::vector<Shape*> bvhShapes;
-    bvh.transverse(ray, bvhShapes);
+    bvh.traverse(ray, best);
 
     /*
     if (!bvhShapes.empty()) {
@@ -53,11 +52,6 @@ bool World::colour(Ray& ray, HitRecord& out) {
         out.emission = Vector3(1, 0, 1);
         return true;
     }*/
-    for (auto shape : bvhShapes) {
-        HitRecord rec(shape, ray);
-        shape->intersect(ray, rec);
-        if ((rec.hit && !best.hit) || ((rec.distance < best.distance) && rec.distance != -1.0f)) best = rec;
-    }
 
     if (!best.hit) { // This runs if there was no intersection, and it hit the skyyyyyy
         Vector3 d = Vector3() - ray.direction;
@@ -91,7 +85,7 @@ void World::buildBvh() {
         max.z = fmax(shapeBoundingBox.max.z, max.z);
     }
     bvh.self = AABB(min, max);
-    bvh.split(100);
+    bvh.split(1500);
 
 }
 
@@ -147,7 +141,7 @@ void World::renderChunk(int id, int* out, Camera& cam){
 }
 
 // Method for threads
-void World::renderChunks(std::vector<int> ids, int *out, Camera &cam) {
+void World::renderChunks(int *out, Camera &cam) {
     while(!renderStack.empty()) {
         renderChunk(renderStack.pop(), out, cam);
     }
@@ -163,13 +157,14 @@ void World::render(int* out, int threads) {
     }
     std::vector<std::vector<int>> chunksids;
     chunksids.reserve(threads);
+
+    const int totalChunks = chunkCountX * chunkCountY;
+#ifdef SPIRAL
     int x = chunkCountX / 2;
     int y = chunkCountY / 2;
     bool left = false;
     bool down = false;
     int leftToTravel = 1;
-    const int totalChunks = chunkCountX * chunkCountY;
-#ifdef SPIRAL
     renderStack.push(x + y * chunkCountX);
     while(renderStack.size() <= totalChunks){
         for(int i=0; i<leftToTravel; i++){
@@ -190,8 +185,9 @@ void World::render(int* out, int threads) {
     }
 #endif
     std::vector<std::thread> renderThreads;
+    renderThreads.reserve(threads);
     for(int i=0; i<threads; i++){
-        renderThreads.emplace_back(&World::renderChunks, this, chunksids[i], std::ref(out), std::ref(cam));
+        renderThreads.push_back(std::thread(&World::renderChunks, this, std::ref(out), std::ref(cam)));
     }
     for(int i=0; i<threads; i++){
         renderThreads[i].join();

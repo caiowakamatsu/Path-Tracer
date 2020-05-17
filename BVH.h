@@ -7,6 +7,7 @@
 #include "Shape.h"
 #include "AABB.h"
 
+#include <cfloat>
 #include <vector>
 
 class BVH { // Note: this is actually a BVH node, but I decided to call it BVH because it's shorter and more concise.
@@ -18,7 +19,8 @@ public:
     BVH(AABB aabb);
 
     void split(int MaxPerNode);
-    void transverse(Ray& ray, std::vector<Shape*>& shapes);
+    bool isEnd();
+    void traverse(Ray& ray, HitRecord& record);
 };
 
 
