@@ -18,5 +18,8 @@ public:
 
     bool intersect(Ray &ray);
     bool intersect(AABB &aabb);
+    bool intersect(Vector3 &vector3);
     float getAreaRating();
+    Vector3 getCenter();
+    void extend(AABB& aabb);
 };

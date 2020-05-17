@@ -60,6 +60,12 @@ bool AABB::intersect(AABB &aabb) {
     return true;
 }
 
+bool AABB::intersect(Vector3 &vector3) {
+    for(int i=0; i<3; i++)
+        if(!(min[i] < vector3[i] && vector3[i] < max[i])) return false;
+    return true;
+}
+
 float AABB::getAreaRating() {
     float edge0 = max.x - min.x;
     float edge1 = max.y - min.y;
@@ -70,3 +76,16 @@ float AABB::getAreaRating() {
     return area;
 }
 
+Vector3 AABB::getCenter(){
+    return Vector3(
+            (min[0] + max[0]) * .5f,
+            (min[1] + max[1]) * .5f,
+            (min[2] + max[2]) * .5f);
+}
+
+void AABB::extend(AABB &aabb) {
+    for(int i=0; i<3; i++) /* go through each axis */ {
+        min[i] = fmin(aabb.min[i], min[i]);
+        max[i] = fmax(aabb.max[i], max[i]);
+    }
+}
