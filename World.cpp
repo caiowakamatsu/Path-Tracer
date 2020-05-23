@@ -17,8 +17,8 @@ World::World(int w, int h, Texture& t, int m, int s) : texture(t) {
     aspect = (float) width / height;
 
     // Split the world into different chunks to be rendered
-    chunkCountX = 16; // Ill add a way to do these dynamically or something later
-    chunkCountY = 16;
+    chunkCountX = 32; // Ill add a way to do these dynamically or something later
+    chunkCountY = 32;
     chunkSizeX = width / chunkCountX;
     chunkSizeY = height / chunkCountY;
 
@@ -85,8 +85,7 @@ void World::buildBvh() {
         max.z = fmax(shapeBoundingBox.max.z, max.z);
     }
     bvh.self = AABB(min, max);
-    bvh.split(1500);
-
+    bvh.split(90);
 }
 
 // This function returns the colour of a single path trace (With recursive rays)
@@ -149,7 +148,7 @@ void World::renderChunks(int *out, Camera &cam) {
 
 // Renders out the entire scene
 void World::render(int* out, int threads) {
-    auto cam = Camera(Vector3(50, 70, 50), Vector3(0, 0, 0), 30, aspect);
+    auto cam = Camera(Vector3(-5, 4, 4), Vector3(0, 0, 0), 30, aspect);
     const auto processor_count = std::thread::hardware_concurrency() - 2;
     if(processor_count < threads){
         std::cout << "[WARN] Specified more threads than machine has forcing down to " << processor_count << " threads." << std::endl;

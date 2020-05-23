@@ -19,7 +19,7 @@
 #include "Rectangle.h"
 #include "NormalMat.h"
 
-constexpr int WIDTH = 1280, HEIGHT = 720, MAX_BOUNCES = 6, SPP = 1;
+constexpr int WIDTH = 1024, HEIGHT = 576, MAX_BOUNCES = 6, SPP = 1;
 
 //#define SPHERES
 
@@ -39,9 +39,9 @@ int main(int argc, char **argv) {
 
 //    const char* p = "../skybox/abandoned_parking.jpg";
 //    const char* p = "../skybox/modern_buildings_night.jpg";
-    const char* p = "../skybox/kloofendal_48d_partly_cloudy.jpg";
+//    const char* p = "../skybox/kloofendal_48d_partly_cloudy.jpg";
 //    const char* p = "../skybox/shanghai_bund.jpg";
-//    const char* p = {"../skybox/adams_place_bridge.jpg"};
+    const char* p = {"../skybox/adams_place_bridge.jpg"};
     pixels = new int[WIDTH * HEIGHT]{0};
     Texture t = Texture(p, .875, 0);
 //    Texture t = Texture();
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
 #endif
     // Obj loading time
 
-    std::string inputfile = "../objs/utah-teapot.obj";
+    std::string inputfile = "../objs/rabbit.obj";
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
@@ -139,7 +139,16 @@ int main(int argc, char **argv) {
 
     Material* foxMat = new Lambertian(Texture("../objs/texture.png"));
 
+    Material* floorMat = new DynMat(0, 1, Texture(1, 1, 1));
+
+    world.addShape(new Rectangle(
+            Vertex(Vector3(10, -0, -10), 0, 0),
+            Vertex(Vector3(-10, -0, -10), 0, 0),
+            Vertex(Vector3(10, -0, 10), 0, 0),
+            Vertex(Vector3(-10, -0, 10), 0, 0), floorMat));
+
     for(size_t s=0; s<shapes.size(); s++){
+//    for(size_t s=0; s<0; s++){
         size_t indexOffset = 0;
         for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
             int fv = shapes[s].mesh.num_face_vertices[f];
@@ -161,6 +170,7 @@ int main(int argc, char **argv) {
                     vertices[0],
                     vertices[1],
                     vertices[2],
+//                    new Lambertian(Texture(0.0, 0.7, 0.7))));
 //                    new DynMat(0, 1, Texture(1, 1, 1))
                     new NormalMat(true)));
 //                    foxMat));

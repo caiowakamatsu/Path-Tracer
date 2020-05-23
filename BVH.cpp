@@ -3,6 +3,8 @@
 //
 
 #include <algorithm>
+#include <assert.h>
+#include <iostream>
 #include "BVH.h"
 
 BVH::BVH(AABB aabb) {
@@ -24,29 +26,37 @@ void BVH::split(int maxPerNode) {
 
     // "left" bvh
     children[0] = new BVH(AABB(
-            FLT_MAX,
-            FLT_MAX,
-            FLT_MAX,
-            -FLT_MAX,
-            -FLT_MAX,
-            -FLT_MAX));
+            std::numeric_limits<float>::max(),
+            std::numeric_limits<float>::max(),
+            std::numeric_limits<float>::max(),
+            -std::numeric_limits<float>::max(),
+            -std::numeric_limits<float>::max(),
+            -std::numeric_limits<float>::max()));
+
+    if(children[0] == nullptr)
+        std::cerr << "Children 0 is a nullptr";
 
     // "right" bvh
     children[1] = new BVH(AABB(
-            FLT_MAX,
-            FLT_MAX,
-            FLT_MAX,
-            -FLT_MAX,
-            -FLT_MAX,
-            -FLT_MAX));
+            std::numeric_limits<float>::max(),
+            std::numeric_limits<float>::max(),
+            std::numeric_limits<float>::max(),
+            -std::numeric_limits<float>::max(),
+            -std::numeric_limits<float>::max(),
+            -std::numeric_limits<float>::max()));
+
+    if(children[1] == nullptr)
+        std::cerr << "Children 1 is a nullptr";
 
     for(auto p : shapes){
         AABB shapeAABB = p->getBoundingBox();
         if(shapeAABB.getCenter()[axis] < splitCoord){
             children[0]->self.extend(shapeAABB);
+            assert(p != nullptr);
             children[0]->shapes.push_back(p);
         } else {
             children[1]->self.extend(shapeAABB);
+            assert(p != nullptr);
             children[1]->shapes.push_back(p);
         }
     }
@@ -56,19 +66,21 @@ void BVH::split(int maxPerNode) {
            return a->getBoundingBox().getCenter()[axis] < b->getBoundingBox().getCenter()[axis];
         });
         children[0]->self = AABB(
-                FLT_MAX,
-                FLT_MAX,
-                FLT_MAX,
-                -FLT_MAX,
-                -FLT_MAX,
-                -FLT_MAX);
+                std::numeric_limits<float>::max(),
+                std::numeric_limits<float>::max(),
+                std::numeric_limits<float>::max(),
+                -std::numeric_limits<float>::max(),
+                -std::numeric_limits<float>::max(),
+                -std::numeric_limits<float>::max()
+                );
         children[1]->self = AABB(
-                FLT_MAX,
-                FLT_MAX,
-                FLT_MAX,
-                -FLT_MAX,
-                -FLT_MAX,
-                -FLT_MAX);
+                std::numeric_limits<float>::max(),
+                std::numeric_limits<float>::max(),
+                std::numeric_limits<float>::max(),
+                -std::numeric_limits<float>::max(),
+                -std::numeric_limits<float>::max(),
+                -std::numeric_limits<float>::max()
+                );
         size_t halfSize = shapes.size() / 2;
         for(size_t i=0; i<halfSize; ++i){
             AABB a = shapes[i]->getBoundingBox();
@@ -96,7 +108,7 @@ bool BVH::isEnd() {
 }
 
 void BVH::traverse(Ray &ray, HitRecord& best) {
-    if(this == nullptr || !self.intersect(ray)){
+    if(!self.intersect(ray)){
         return;
     }
     if(isEnd()){
