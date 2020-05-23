@@ -4,10 +4,14 @@
 
 #pragma once
 
-#include "Shape.h"
 #include <bvh/triangle.hpp>
+#include "Vector3.h"
+#include "Vertex.h"
+#include "Material.h"
 
-class Triangle : public Shape {
+class Material;
+
+class Triangle {
 public:
     Vector3 normal, unnormalizedNormal;
     Vertex vertices[3];
@@ -15,8 +19,7 @@ public:
     bvh::Triangle<float> bvhTri;
     Triangle() = default;
     Triangle(Vertex vertex0, Vertex vertex1, Vertex vertex2, Material* Material);
-    void intersect(Ray &, HitRecord &) override;
-    Vector3 getNormal(Vector3 &) override;
-    Material* getMaterial() override;
-    AABB getBoundingBox() override;
+    Vector3 getNormal(Vector3 &);
+    Material* getMaterial();
+    Vector3 getUv(Vector3 barycentric);
 };

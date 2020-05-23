@@ -11,7 +11,7 @@ public:
     Vector3 pos;
     float u, v;
     Vertex() = default;
-    Vertex(Vector3 position, float u, float v);
+    Vertex(Vector3 position, float u = 0, float v = 0);
 };
 
 

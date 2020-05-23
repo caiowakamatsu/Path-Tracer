@@ -13,8 +13,7 @@ void DynMat::transformRay(Ray &ray, HitRecord &rec) {
     Vector3 rayOrigin = ray.direction;
     Vector3 a = rec.normal * rec.normal.dot(rec.ray.direction) * 2;
     Vector3 reflection = rayOrigin - a;
-    Vector3 offset = rec.normal * 0.0001f;
-    ray.origin = rec.intersectionPoint + offset;
+    ray.origin = rec.intersectionPoint;
     ray.direction = reflection.toUnitVector();
     if(diffuse > 0){
         Vector3 point = Vector3(drand48() * 2 - 1, drand48() * 2 - 1, drand48() * 2 - 1);

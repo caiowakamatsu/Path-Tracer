@@ -4,18 +4,18 @@
 
 #pragma once
 
-#include "Shape.h"
+#include "Triangle.h"
 #include "Ray.h"
 #include "Vector3.h"
 
-class Shape;
+class Triangle;
 
 struct HitRecord {
 public:
-    HitRecord(Shape* s, Ray r) : ray(r) {
+    HitRecord(Triangle* s, Ray r) : ray(r) {
         hit = false;
         distance = -1.0f;
-        shape = s;
+        triangle = s;
     }
     bool hit;
     float distance;
@@ -25,7 +25,7 @@ public:
     Ray outRay;
     Vector3 emission;
     Vector3 albedo;
-    Shape* shape;
+    Triangle* triangle;
     Vector3 intersectionPoint;
     Vector3 normal;
 };

@@ -15,5 +15,5 @@ add_subdirectory(bvh)
 
 include_directories(bvh ${OPENGL_INCLUDE_DIRS} ${ZLIB_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS} glfw)
 
-add_executable(Path_Tracer main.cpp File.cpp File.h Vector3.cpp Vector3.h World.cpp World.h Ray.cpp Ray.h Shape.h HitRecord.h Camera.cpp Camera.h Material.h ColourCache.h Texture.cpp Texture.h DynMat.cpp DynMat.h Lambertian.cpp Lambertian.h Glass.cpp Glass.h Triangle.cpp Triangle.h Rectangle.cpp Rectangle.h RenderStack.h NormalMat.cpp NormalMat.h Window.cpp Window.h tinyobjloader.h AABB.cpp AABB.h Vertex.cpp Vertex.h BVH.cpp BVH.h)
+add_executable(Path_Tracer main.cpp File.cpp File.h Vector3.cpp Vector3.h World.cpp World.h Ray.cpp Ray.h HitRecord.h Camera.cpp Camera.h Material.h ColourCache.h Texture.cpp Texture.h DynMat.cpp DynMat.h Lambertian.cpp Lambertian.h Glass.cpp Glass.h Triangle.cpp Triangle.h RenderStack.h NormalMat.cpp NormalMat.h Window.cpp Window.h tinyobjloader.h Vertex.cpp Vertex.h)
 target_link_libraries(Path_Tracer PUBLIC ${OPENGL_LIBRARIES} ${PNG_LIBRARY} ${PNG_INCLUDE_DIR} ${ZLIB_LIBRARIES} glfw bvh)

@@ -13,8 +13,7 @@ Lambertian::Lambertian(Texture t, Vector3 e) : texture(t), emission(e) {
 // Yo highkey dont use this idk whats wrong
 // Hey past me, I should have fixed this. If this turns out to not be correct again im going to cry
 void Lambertian::transformRay(Ray &ray, HitRecord &rec) {
-    Vector3 offset = rec.normal * 0.001f;
-    ray.origin = rec.intersectionPoint + offset;
+    ray.origin = rec.intersectionPoint;
     float x = drand48();
     float y = drand48();
     float phi =  2.0f * M_PI * x;

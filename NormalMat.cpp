@@ -9,8 +9,7 @@ NormalMat::NormalMat(bool l) {
 }
 
 void NormalMat::transformRay(Ray &ray, HitRecord &rec) {
-    Vector3 offset = rec.normal * 0.0001f;
-    ray.origin = rec.intersectionPoint + offset;
+    ray.origin = rec.intersectionPoint;
     Vector3 point = Vector3(drand48() * 2 - 1, drand48() * 2 - 1, drand48() * 2 - 1);
     point = point.toUnitVector();
     ray.direction = point;
