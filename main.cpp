@@ -3,7 +3,6 @@
 #include "File.h"
 #include "World.h"
 #include "Vector3.h"
-#include "Sphere.h"
 #include "Material.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -97,22 +96,6 @@ int main(int argc, char **argv) {
                         new Lambertian(Texture(0.96, 0.96, 0.86))));
 #endif
 
-#ifdef SPHERES
-    int size = 7;
-    int start = -1 * (size-1) / 2;
-    int end = size + start;
-    for(int x=start; x<end; x++)
-        for(int y=start; y<end; y++)
-            for(int z=start; z<end; z++){
-                Material* mat;
-                if(drand48() < 0.5){
-                    mat = new Glass(1.5);
-                } else {
-                    mat = new DynMat(0, 0.65, Texture(drand48() * 0.5 + 0.5, drand48() * 0.5 + 0.5, drand48() * 0.5 + 0.5));
-                }
-                world.addShape(new Sphere(Vector3(x * 7 + drand48() * 2.5, y * 7 + drand48() * 2.5, z * 7 + drand48() * 2.5), drand48() * 2 + 1, mat));
-            }
-#endif
     // Obj loading time
 
     std::string inputfile = "../objs/rabbit.obj";
