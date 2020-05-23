@@ -5,7 +5,6 @@
 #include "Vector3.h"
 #include "Sphere.h"
 #include "Material.h"
-#include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #define TINYOBJLOADER_IMPLEMENTATION
@@ -18,6 +17,7 @@
 #include "Triangle.h"
 #include "Rectangle.h"
 #include "NormalMat.h"
+#include "Window.h"
 
 constexpr int WIDTH = 1024, HEIGHT = 576, MAX_BOUNCES = 6, SPP = 1;
 
@@ -181,28 +181,9 @@ int main(int argc, char **argv) {
         }
     }
 
-    // OpenGL stuff
-    GLFWwindow* window;
-    if(!glfwInit()){ // I should really make a window class to make this code somewhat cleaner...
-        std::cerr << "Failed to initialize GLFW, is it installed?" << std::endl;
-        return -1;
-    }
-    window = glfwCreateWindow(WIDTH, HEIGHT, "Path Tracer", NULL, NULL);
-    if(!window){
-        glfwTerminate();
-        std::cerr << "Failed to created GLFW window, issue with GLFW installation?" << std::endl;
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
+    Window window(WIDTH, HEIGHT, pixels);
     std::thread renderThread(renderAsync, std::ref(world));
-    while (!glfwWindowShouldClose(window))
-    {
-        glClear(GL_COLOR_BUFFER_BIT);
-        glDrawPixels(WIDTH, HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-        glfwSwapBuffers(window);
-        glfwPollEvents();
-    }
-    glfwTerminate();
+    window.start();
     renderThread.join();
     delete(pixels);
     return 0;
