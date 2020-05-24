@@ -10,7 +10,7 @@
 #include "Lambertian.h"
 #include "Glass.h"
 
-constexpr int WIDTH = 1024, HEIGHT = 576, MAX_BOUNCES = 6, SPP = 32;
+constexpr int WIDTH = 1024, HEIGHT = 576, MAX_BOUNCES = 6, SPP = 16 ;
 
 //#define SPHERES
 
@@ -38,17 +38,12 @@ int main(int argc, char **argv) {
     auto world = World(WIDTH, HEIGHT, t, MAX_BOUNCES, SPP);
 
     std::vector<Vector3> offsets = {};
-    offsets.emplace_back(0, 0, 6);
-    offsets.emplace_back(0, 0, 0);
-    offsets.emplace_back(0, 0, -6);
-//    world.loadObj("../objs/fox.obj", new DynMat(0, 1, Texture("../objs/texture.png")), offsets);
-//    world.loadObj("../objs/dragon.obj", new Lambertian(Texture(0.7, 0.7, 0.7)), offsets);
-//    world.loadObj("../objs/dragon.obj", new DynMat(0.01, 1, Texture(0.7, 0.7, 0.7)), offsets);
-    world.loadObj("../objs/minecraft-fountain.obj", new Glass(1.5));
-//    world.loadObj("../objs/utah-teapot.obj", new DynMat(0, 1, Texture(1, 1, 1)), offsets);
+//    offsets.emplace_back(0, 0, 6);
+//    offsets.emplace_back(0, 0, 0);
+//    offsets.emplace_back(0, 0, -6);
+    world.loadObj("../models/shuttle/space-shuttle-orbiter.obj", new Glass(1.5));
 
-    world.setCameraLocation(Vector3(0.02, 0.02, 0.02));
-//    world.setLookAt(Vector3(-1715.500000, 78.500000, -3010.500000));
+    world.setCameraLocation(Vector3(500, 450, 500));
     Window window(WIDTH, HEIGHT, pixels);
     std::thread renderThread(renderAsync, std::ref(world));
     window.start();

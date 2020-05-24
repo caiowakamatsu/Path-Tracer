@@ -8,8 +8,6 @@
 #include <thread>
 #include <random>
 #include "Vertex.h"
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "tinyobjloader.h"
 
 World::World(int w, int h, Texture& t, int m, int s) : texture(t) {
     width = w;
@@ -89,65 +87,7 @@ void World::buildBvh() {
 }
 
 void World::loadObj(const char *path, Material* meshMat, std::vector<Vector3> translations) {
-    std::string inputfile = path;
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
 
-    std::string warn;
-    std::string err;
-
-    bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, inputfile.c_str());
-
-    if (!warn.empty())
-        std::cout << warn << std::endl;
-
-
-    if (!err.empty())
-        std::cerr << err << std::endl;
-
-    if (!ret)
-        exit(1);
-
-    if(translations.empty())
-        translations.emplace_back(Vector3(0, 0, 0));
-
-    for(size_t s=0; s<shapes.size(); s++){
-        size_t indexOffset = 0;
-        std::cout << "Model Loaded [" << path << "]" << " Triangles [" << shapes[s].mesh.num_face_vertices.size() << "]" << std::endl;
-        for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-            int fv = shapes[s].mesh.num_face_vertices[f];
-
-            // Loop over vertices in the face.
-            Vertex vertices[3];
-            for (size_t v = 0; v < fv; v++) {
-                // access to Vertex
-                tinyobj::index_t idx = shapes[s].mesh.indices[indexOffset + v];
-                vertices[v] = Vertex(
-                        Vector3(attrib.vertices[3*idx.vertex_index+0],
-                                attrib.vertices[3*idx.vertex_index+1],
-                                attrib.vertices[3*idx.vertex_index+2]),
-                        attrib.texcoords[2*idx.texcoord_index+0],
-                        attrib.texcoords[2*idx.texcoord_index+1]);
-            }
-            for(auto & translation : translations){
-                Vertex translated[3] = {vertices[0], vertices[1], vertices[2]};
-                translated[0].pos += translation;
-                translated[1].pos += translation;
-                translated[2].pos += translation;
-                addTriangle(new Triangle(
-                        translated[0],
-                        translated[1],
-                        translated[2],
-                        meshMat));
-            }
-
-            indexOffset += fv;
-
-            // per-face material
-            shapes[s].mesh.material_ids[f];
-        }
-    }
 }
 
 // This function returns the colour of a single path trace (With recursive rays)
