@@ -41,9 +41,9 @@ int main(int argc, char **argv) {
 //    offsets.emplace_back(0, 0, 6);
 //    offsets.emplace_back(0, 0, 0);
 //    offsets.emplace_back(0, 0, -6);
-    world.loadObj("../models/shuttle/space-shuttle-orbiter.obj", new Glass(1.5));
+    world.loadModel("../models/lowpoly/rabbit.obj");
 
-    world.setCameraLocation(Vector3(500, 450, 500));
+    world.setCameraLocation(Vector3(5, 5, 5));
     Window window(WIDTH, HEIGHT, pixels);
     std::thread renderThread(renderAsync, std::ref(world));
     window.start();

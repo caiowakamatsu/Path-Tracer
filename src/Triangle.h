@@ -19,6 +19,7 @@ public:
     bvh::Triangle<float> bvhTri;
     Triangle() = default;
     Triangle(Vertex vertex0, Vertex vertex1, Vertex vertex2, Material* Material);
+    void calculateNormal();
     Vector3 getNormal(Vector3 &);
     Material* getMaterial();
     Vector3 getUv(Vector3 barycentric);

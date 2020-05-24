@@ -86,8 +86,9 @@ void World::buildBvh() {
     builder.build(global_bbox, bboxes.get(), centers.get(), bvh_triangles.size());
 }
 
-void World::loadObj(const char *path, Material* meshMat, std::vector<Vector3> translations) {
-
+void World::loadModel(const char *path, const std::vector<Vector3>& translations, Material* meshMat) {
+    ModelLoader loader;
+    loader.loadModel("../models/lowpoly/rabbit.obj", *this);
 }
 
 // This function returns the colour of a single path trace (With recursive rays)

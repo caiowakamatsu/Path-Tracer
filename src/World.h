@@ -15,8 +15,7 @@
 #include <bvh/sweep_sah_builder.hpp>
 #include <bvh/single_ray_traverser.hpp>
 #include <bvh/intersectors.hpp>
-
-
+#include "ModelLoader.h"
 #include "Triangle.h"
 #include "NormalMat.h"
 
@@ -44,6 +43,6 @@ public:
     void addTriangle(Triangle* triangle);
     void render(int*, int threads);
     void buildBvh();
-    void loadObj(const char* path, Material* material, std::vector<Vector3> offsets = {});
+    void loadModel(const char* path, const std::vector<Vector3>& offsets = {}, Material* material = nullptr);
     Vector3 trace(Ray ray, int);
 };

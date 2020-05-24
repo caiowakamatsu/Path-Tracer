@@ -3,7 +3,6 @@
 //
 #include <cmath>
 #include "Triangle.h"
-#include <Eigen/Dense>
 #include <iostream>
 
 Triangle::Triangle(Vertex v0, Vertex v1, Vertex v2, Material* m) {
@@ -12,6 +11,10 @@ Triangle::Triangle(Vertex v0, Vertex v1, Vertex v2, Material* m) {
     vertices[2] = v2;
     normal = (v1.pos - v0.pos).cross(v2.pos - v0.pos).toUnitVector();
     material = m;
+}
+
+void Triangle::calculateNormal(){
+    normal = (vertices[1].pos - vertices[0].pos).cross(vertices[2].pos - vertices[0].pos).toUnitVector();
 }
 
 Vector3 Triangle::getNormal(Vector3 &) {
