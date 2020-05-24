@@ -27,7 +27,7 @@ class World {
 private:
     int width, height, maxBounce, spp, sppRt, chunkSizeX, chunkSizeY, chunkCountX, chunkCountY;
     float aspect, sampleStart, sampleOffset;
-    Vector3 cameraLocation;
+    Vector3 cameraLocation, lookatLocation;
     Texture& texture;
     std::vector<Triangle*> triangles;
     std::vector<bvh::Triangle<float>> bvh_triangles;
@@ -40,6 +40,7 @@ public:
     World(int, int, Texture&, int = 4, int = 1);
     ~World();
     void setCameraLocation(Vector3 location);
+    void setLookAt(Vector3 location);
     void addTriangle(Triangle* triangle);
     void render(int*, int threads);
     void buildBvh();

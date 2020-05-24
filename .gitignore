@@ -4,3 +4,5 @@ skybox/
 renders/
 !textures/
 .idea/.name
+.idea/statistic.xml
+textures/

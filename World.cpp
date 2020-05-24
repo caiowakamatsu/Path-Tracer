@@ -114,6 +114,7 @@ void World::loadObj(const char *path, Material* meshMat, std::vector<Vector3> tr
 
     for(size_t s=0; s<shapes.size(); s++){
         size_t indexOffset = 0;
+        std::cout << "Model Loaded [" << path << "]" << " Triangles [" << shapes[s].mesh.num_face_vertices.size() << "]" << std::endl;
         for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
             int fv = shapes[s].mesh.num_face_vertices[f];
 
@@ -209,7 +210,7 @@ void World::renderChunks(int *out, Camera &cam) {
 
 // Renders out the entire scene
 void World::render(int* out, int threads) {
-    auto cam = Camera(cameraLocation, Vector3(0, 0, 0), 30, aspect);
+    auto cam = Camera(cameraLocation, lookatLocation, 30, aspect);
     const auto processor_count = std::thread::hardware_concurrency() - 2;
     if(processor_count < threads){
         std::cout << "[WARN] Specified more threads than machine has forcing down to " << processor_count << " threads." << std::endl;
@@ -259,5 +260,8 @@ void World::render(int* out, int threads) {
 }
 
 void World::setCameraLocation(Vector3 location) {
+    cameraLocation = location;
+}
+void World::setLookAt(Vector3 location) {
     cameraLocation = location;
 }
